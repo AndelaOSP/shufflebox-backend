@@ -39,3 +39,15 @@ class BrownBag(models.Model):
     date = models.DateField(blank=True)
     status = models.CharField(max_length=20, default="not done")
     user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+
+class Hangout(models.Model):
+    """Class definition for the Hangout model."""
+    date = models.DateField()
+
+
+class SecretSanta(models.Model):
+    """Class definition for the Secret santa model."""
+    date = models.DateField()
+    santa = models.ForeignKey(User, on_delete=models.CASCADE)
+    giftee = models.ForeignKey(User, on_delete=models.CASCADE)
