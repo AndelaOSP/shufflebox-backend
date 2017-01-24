@@ -49,5 +49,6 @@ class Hangout(models.Model):
 class SecretSanta(models.Model):
     """Class definition for the Secret santa model."""
     date = models.DateField()
-    santa = models.ForeignKey(User, on_delete=models.CASCADE)
+    santa = models.ForeignKey(
+        User, related_name="santa", on_delete=models.CASCADE)
     giftee = models.ForeignKey(User, on_delete=models.CASCADE)
