@@ -46,6 +46,12 @@ class Hangout(models.Model):
     date = models.DateField()
 
 
+class UserHangout(models.Model):
+    """Class definition for the hangout and user join table."""
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    hangout_id = models.ForeignKey(Hangout, on_delete=models.CASCADE)
+
+
 class SecretSanta(models.Model):
     """Class definition for the Secret santa model."""
     date = models.DateField()
