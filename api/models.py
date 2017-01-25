@@ -17,6 +17,10 @@ class Profile(models.Model):
     def __unicode__(self):
         return u'User Profile for: {}'.format(self.user.username)
 
+    def __str__(self):
+        """Return a string representation of the model instance."""
+        return "{}".format(self.user.username)
+
 
 # Decorator to pass in a post_save signal
 @receiver(post_save, sender=User)
