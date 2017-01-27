@@ -12,7 +12,7 @@ if not os.getenv('CI') and not os.getenv('HEROKU'):
     from dotenv import load_dotenv
     load_dotenv('.env')
 
-    from development import *
+    from shufflebox.settings.development import *
 
 if os.getenv('HEROKU'):
     from production import *
