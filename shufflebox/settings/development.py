@@ -2,7 +2,7 @@
 Development specific settings.
 """
 
-from .base import *
+from shufflebox.settings.base import *
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
