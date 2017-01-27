@@ -2,7 +2,7 @@
 Test specific settings.
 """
 
-from .base import *
+from shufflebox.settings.base import *
 
 DATABASES = {
     'default': {
