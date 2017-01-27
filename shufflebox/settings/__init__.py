@@ -9,8 +9,8 @@ import os
 if not os.getenv('CI') and not os.getenv('HEROKU'):
     # load and set environment variables from '.env.yml' or '.env.py' files
     # with django_envie
-    from django_envie.workroom import convertfiletovars
-    convertfiletovars()
+    from dotenv import load_dotenv
+    load_dotenv('.env')
 
     from development import *
 
