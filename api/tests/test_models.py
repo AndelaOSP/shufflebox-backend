@@ -36,7 +36,11 @@ class ModelTestCase(TestCase):
 
     def test_hangout_creation(self):
         """Test a hangout group can be created"""
-        pass
+        self.count = Hangout.objects.count()
+        self.hangout = Hangout.objects.create(date=self.date)
+        self.new_count = Hangout.objects.count()
+        self.assertNotEqual(self.count, self.new_count)
+
 
     def test_brownbag_creation(self):
         """Test a BrownBag can be created."""
