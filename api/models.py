@@ -44,10 +44,18 @@ class BrownBag(models.Model):
     status = models.CharField(max_length=20, default="not done")
     user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
+    def __str__(self):
+        """Return a string representation of the model instance."""
+        return "{} Status: {}".format(self.user_id, self.status)
+
 
 class Hangout(models.Model):
     """Class definition for the Hangout model."""
     date = models.DateField()
+
+    def __str__(self):
+        """Return a string representation of the model instance."""
+        return "Hangout date: {}".format(self.date)
 
 
 class UserHangout(models.Model):
@@ -62,3 +70,7 @@ class SecretSanta(models.Model):
     santa = models.ForeignKey(
         User, related_name="santa", on_delete=models.CASCADE)
     giftee = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        """Return a string representation of the model instance."""
+        return "Santa: {}, Giftee: {}".format(self.santa, self.giftee)
