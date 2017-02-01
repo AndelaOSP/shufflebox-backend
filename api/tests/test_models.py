@@ -49,6 +49,18 @@ class ModelTestCase(TestCase):
         self.new_count = BrownBag.objects.count()
         self.assertNotEqual(self.count, self.new_count)
 
+    def test_secret_santa_creation(self):
+        """Test a SecretSanta can be created."""
+        self.count = SecretSanta.objects.count()
+        giftee = User.objects.create(username="giftee", email="g@gmail.com")
+        santa = SecretSanta.objects.create(
+            date=self.date,
+            santa=self.user,
+            giftee=giftee
+        )
+        self.new_count = SecretSanta.objects.count()
+        self.assertNotEqual(self.count, self.new_count)
+
     def test_models_return_human_readable_representation(self):
         """Test the models instances return a string."""
         self.assertEqual(str(self.user), self.username)
