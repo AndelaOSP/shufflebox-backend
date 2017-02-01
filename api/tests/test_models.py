@@ -41,10 +41,13 @@ class ModelTestCase(TestCase):
         self.new_count = Hangout.objects.count()
         self.assertNotEqual(self.count, self.new_count)
 
-
     def test_brownbag_creation(self):
         """Test a BrownBag can be created."""
-        pass
+        self.count = BrownBag.objects.count()
+        self.brownbag = BrownBag.objects.create(
+            date=self.date, status="not done", user_id=self.user.profile)
+        self.new_count = BrownBag.objects.count()
+        self.assertNotEqual(self.count, self.new_count)
 
     def test_models_return_human_readable_representation(self):
         """Test the models instances return a string."""
