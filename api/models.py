@@ -52,16 +52,11 @@ class BrownBag(models.Model):
 class Hangout(models.Model):
     """Class definition for the Hangout model."""
     date = models.DateField()
+    members = models.ManyToManyField(User)
 
     def __str__(self):
         """Return a string representation of the model instance."""
-        return "Hangout date: {}".format(self.date)
-
-
-class UserHangout(models.Model):
-    """Class definition for the hangout and user join table."""
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    hangout_id = models.ForeignKey(Hangout, on_delete=models.CASCADE)
+        return "Hangout members: {}".format(self.members.all())
 
 
 class SecretSanta(models.Model):
