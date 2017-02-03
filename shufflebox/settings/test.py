@@ -6,9 +6,8 @@ from shufflebox.settings.base import *
 
 #Use the following live settings to build on Travis CI
 if os.getenv('TRAVIS_BUILD', None):
-    SECRET_KEY = "SecretKeyForUseOnTravis"
+    SECRET_KEY = os.getenv('SECRET_KEY')
     DEBUG = False
-    TEMPLATE_DEBUG = True
 
     DATABASES = {
         'default': {

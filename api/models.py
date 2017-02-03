@@ -56,7 +56,7 @@ class Hangout(models.Model):
 
     def __str__(self):
         """Return a string representation of the model instance."""
-        return "Hangout members: {}".format(self.members.all())
+        return "Hangout: {}, Members: {}".format(self.pk, self.members.all())
 
 
 class SecretSanta(models.Model):
