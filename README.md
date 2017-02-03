@@ -1,4 +1,5 @@
 # shufflebox-backend
+[![Build Status](https://travis-ci.org/AndelaOSP/shufflebox-backend.svg?branch=master)](https://travis-ci.org/AndelaOSP/shufflebox-backend)
 
 ## Overview
 A Django-powered API for handling shufflebox consumption client requests
