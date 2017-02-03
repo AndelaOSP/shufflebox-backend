@@ -1,0 +1,24 @@
+language: python
+services:
+  - postgresql
+python:
+  - "3.5"
+env:
+  global:
+  - TRAVIS_BUILD=true
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database shufflebox;' -U postgres
+
+# command to run tests
+script:
+  - python manage.py test --noinput
+  - coverage run --omit='*virtualenv*' manage.py test --noinput
+after_success: coveralls
