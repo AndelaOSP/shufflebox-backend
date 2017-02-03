@@ -1,5 +1,5 @@
 from django.test import TestCase
-from api.models import Profile, BrownBag, Hangout, UserHangout, SecretSanta
+from api.models import Profile, BrownBag, Hangout, SecretSanta
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from datetime import datetime
@@ -41,15 +41,14 @@ class ModelTestCase(TestCase):
         self.new_count = Hangout.objects.count()
         self.assertNotEqual(self.count, self.new_count)
 
-    def test_user_hangout_join_creation(self):
-        """Test that the UserHangout field can be created."""
+    def test_adding_members_to_a_hangout(self):
+        """Test that a hangout can add members."""
+        self.count = Hangout.objects.count()
         self.hangout = Hangout.objects.create(date=self.date)
-        self.count = UserHangout.objects.count()
-        self.user_hanogout = UserHangout.objects.create(
-            user_id=self.user, hangout_id=self.hangout)
-        self.new_count = UserHangout.objects.count()
+        self.count = self.hangout.members.count()
+        self.hangout.members.add(self.user)
+        self.new_count = self.hangout.members.count()
         self.assertNotEqual(self.count, self.new_count)
-
 
     def test_brownbag_creation(self):
         """Test a BrownBag can be created."""
