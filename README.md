@@ -10,7 +10,7 @@ A Django-powered API for handling shufflebox consumption client requests
 
 
 ## Installation / Usage
-* If you wish to run your own build, first ensure you have python3 globally installed in your computer. If not, you can get python3 [here](https://www.python.org").
+* If you wish to run your own build, first ensure you have python3 globally installed in your computer. If not, you can get python3 [here](https://www.python.org).
 * After this, ensure you have installed virtualenv globally as well. If not, run this:
     ```
         $ pip install virtualenv
@@ -71,3 +71,6 @@ A Django-powered API for handling shufflebox consumption client requests
     ```
       http://localhost:8000/
     ```
+
+## Contributing
+TBD
