@@ -7,9 +7,13 @@ env:
   global:
   - TRAVIS_BUILD=true
 # command to install dependencies
+
+before_install:
+  - export DJANGO_SETTINGS_MODULE=shufflebox.settings.test
+
 install:
   - pip install -r requirements.txt
-  - pip install coveralls
+  - pip install coveralls --quiet
 
 services:
   - postgresql
