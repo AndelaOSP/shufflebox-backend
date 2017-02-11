@@ -42,7 +42,7 @@ class BrownBag(models.Model):
     """Class definition for the BrownBag model."""
     date = models.DateField(blank=True)
     status = models.CharField(max_length=20, default="not done")
-    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         """Return a string representation of the model instance."""
