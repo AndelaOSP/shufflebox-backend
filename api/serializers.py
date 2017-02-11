@@ -74,4 +74,3 @@ class SecretSantaSerializer(serializers.ModelSerializer):
 
         model = SecretSanta
         fields = ('id', 'date', 'santa', 'giftee')
-        read_only_fields = ('date')
