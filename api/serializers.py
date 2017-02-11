@@ -56,7 +56,6 @@ class BrownbagSerializer(serializers.ModelSerializer):
 
         model = BrownBag
         fields = ('id', 'date', 'status', 'user_id')
-        read_only_fields = ('date')
 
 
 class HangoutSerializer(serializers.ModelSerializer):
