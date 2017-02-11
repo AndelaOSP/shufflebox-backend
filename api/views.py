@@ -29,6 +29,11 @@ class ShuffleView(APIView):
         Return a query set according to the post message status.
         """
         try:
+            req = request.data['type']
+        except KeyError as e:
+            return Response(
+                "Key Error", status=status.HTTP_400_BAD_REQUEST)
+        try:
             request_type = request.data.pop('type')
             if request_type == "brownbag":
                 # Create the next brownbag
@@ -51,15 +56,15 @@ class ShuffleView(APIView):
                 # dummy data simulated from the shufflebox module
                 data = {
                     "date": str(datetime.now().date()),
-                    "status": "nextInLine",
-                    "user_id": 1
+                    "members": [1, 2, 3]
                 }
                 serializer = HangoutSerializer(data=data)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(
                         serializer.data, status=status.HTTP_201_CREATED)
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             elif request_type == "secretsanta":
                 # Create all secretsanta pairs for that year
@@ -74,13 +79,15 @@ class ShuffleView(APIView):
                     serializer.save()
                     return Response(
                         serializer.data, status=status.HTTP_201_CREATED)
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response(
-                    "Error: Bad Request", status=status.HTTP_400_BAD_REQUEST)
+                    "Bad Request With Wrong Unexpected Type",
+                    status=status.HTTP_400_BAD_REQUEST)
         except ParseError:
             return Response(
-                "Error: bad request", status=status.HTTP_400_BAD_REQUEST)
+                "Bad Request: Parse Error", status=status.HTTP_400_BAD_REQUEST)
 
 
 class HangoutView(generics.ListCreateAPIView):
