@@ -10,7 +10,7 @@ class Profile(models.Model):
     Extends default django User model that stores username, email, pword etc
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.CharField(max_length=255, blank=False)
+    avatar = models.CharField(max_length=255, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     bio = models.TextField(default="", max_length=500, blank=True)
 
