@@ -1,7 +1,7 @@
 from .models import BrownBag, Hangout, SecretSanta, Profile
 from .serializers import UserSerializer, ProfileSerializer, \
     BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
-from rest_framework import generics,
+from rest_framework import generics
 from django.contrib.auth.models import User
 
 
