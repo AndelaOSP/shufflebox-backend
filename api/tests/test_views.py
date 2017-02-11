@@ -28,7 +28,8 @@ class UserViewTestCase(TestCase):
 
     def test_api_can_list_all_users(self):
         """Tests that API has user listing capability."""
-        pass
+        res = self.client.get('/api/users/', format="json")
+        self.assertEquals(res.status_code, status.HTTP_200_OK)
 
 
 class BrownbagViewTestCase(TestCase):
