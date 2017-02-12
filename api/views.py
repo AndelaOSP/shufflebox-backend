@@ -29,12 +29,7 @@ class ShuffleView(APIView):
         Return a query set according to the post message status.
         """
         try:
-            req = request.data['type']
-        except KeyError as e:
-            return Response(
-                "Key Error", status=status.HTTP_400_BAD_REQUEST)
-        try:
-            request_type = request.data.pop('type')
+            request_type = request.data['type']
             if request_type == "brownbag":
                 # Create the next brownbag
                 # dummy data simulated from the shufflebox module
@@ -56,7 +51,7 @@ class ShuffleView(APIView):
                 # dummy data simulated from the shufflebox module
                 data = {
                     "date": str(datetime.now().date()),
-                    "members": [1, 2, 3]
+                    "members": [1, 2]
                 }
                 serializer = HangoutSerializer(data=data)
                 if serializer.is_valid():
@@ -71,7 +66,7 @@ class ShuffleView(APIView):
                 # dummy data simulated from the shufflebox module
                 data = {
                     "date": str(datetime.now().date()),
-                    "santa": 3,
+                    "santa": 2,
                     "giftee": 1
                 }
                 serializer = SecretSantaSerializer(data=data)
@@ -83,11 +78,12 @@ class ShuffleView(APIView):
                     serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response(
-                    "Bad Request With Wrong Unexpected Type",
+                    "Bad Request With Wrong Unexpected Value of 'type' key",
                     status=status.HTTP_400_BAD_REQUEST)
-        except ParseError:
+        except KeyError:
             return Response(
-                "Bad Request: Parse Error", status=status.HTTP_400_BAD_REQUEST)
+                "Bad Request: Missing Key 'type'",
+                status=status.HTTP_400_BAD_REQUEST)
 
 
 class HangoutView(generics.ListCreateAPIView):
