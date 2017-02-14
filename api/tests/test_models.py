@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 class ModelTestCase(TestCase):
-    """This class defines a test suite for the shufflebox models."""
+    """This class defines a test suite for the core models."""
 
     def setUp(self):
         """Set up method to define user and other test variables."""
