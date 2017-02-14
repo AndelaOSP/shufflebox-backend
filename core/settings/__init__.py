@@ -1,4 +1,3 @@
-
 """
 Settings package initialization.
 """
@@ -13,10 +12,10 @@ if not os.getenv('CI') and not os.getenv('HEROKU'):
 
     load_dotenv('.env')
 
-    from shufflebox.settings.development import *
+    from core.settings.development import *
 
 if os.getenv('HEROKU'):
-    from shufflebox.settings.production import *
+    from core.settings.production import *
 
 if os.getenv('TRAVIS_BUILD'):
-    from shufflebox.settings.test import *
+    from core.settings.test import *

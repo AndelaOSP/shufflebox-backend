@@ -56,7 +56,6 @@ class BrownbagSerializer(serializers.ModelSerializer):
 
         model = BrownBag
         fields = ('id', 'date', 'status', 'user_id')
-        read_only_fields = ('date')
 
 
 class HangoutSerializer(serializers.ModelSerializer):
@@ -75,4 +74,3 @@ class SecretSantaSerializer(serializers.ModelSerializer):
 
         model = SecretSanta
         fields = ('id', 'date', 'santa', 'giftee')
-        read_only_fields = ('date')
