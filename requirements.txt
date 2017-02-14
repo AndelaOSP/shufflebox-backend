@@ -26,7 +26,7 @@ python3-openid==3.0.10
 pytz==2016.10
 requests==2.13.0
 requests-oauthlib==0.7.0
--e git+git@github.com:AndelaOSP/shufflebox.git
+git+git://github.com/AndelaOSP/shufflebox.git
 smmap==0.9.0
 snowballstemmer==1.2.1
 social-auth-app-django==1.0.1
