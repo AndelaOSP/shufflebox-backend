@@ -2,7 +2,7 @@
 Production specific settings.
 """
 
-from shufflebox.settings.base import *
+from core.settings.base import *
 import dj_database_url
 import os
 

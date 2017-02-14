@@ -2,7 +2,7 @@
 Test specific settings.
 """
 
-from shufflebox.settings.base import *
+from core.settings.base import *
 
 #Use the following live settings to build on Travis CI
 if os.getenv('TRAVIS_BUILD', None):
