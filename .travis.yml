@@ -9,7 +9,7 @@ env:
 # command to install dependencies
 
 before_install:
-  - export DJANGO_SETTINGS_MODULE=shufflebox.settings.test
+  - export DJANGO_SETTINGS_MODULE=core.settings.test
 
 install:
   - pip install -r requirements.txt

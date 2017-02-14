@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 class ModelTestCase(TestCase):
-    """This class defines a test suite for the shufflebox models."""
+    """This class defines a test suite for the core models."""
 
     def setUp(self):
         """Set up method to define user and other test variables."""
@@ -54,7 +54,7 @@ class ModelTestCase(TestCase):
         """Test a BrownBag can be created."""
         self.count = BrownBag.objects.count()
         self.brownbag = BrownBag.objects.create(
-            date=self.date, status="not done", user_id=self.user.profile)
+            date=self.date, status="not done", user_id=self.user)
         self.new_count = BrownBag.objects.count()
         self.assertNotEqual(self.count, self.new_count)
 
