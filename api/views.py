@@ -25,14 +25,6 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
 class ShuffleView(APIView):
     """A view for handling shuffling requests from consumption clients."""
 
-    def get_serializer(self, *args, **kwargs):
-        if "data" in kwargs:
-            data = kwargs["data"]
-
-            if isinstance(data, list):
-                kwargs["many"] = True
-        return super(ShuffleView, self).get_serializer(*args, **kwargs)
-
     def post(self, request):
         """
         Return a query set according to the post message status.
@@ -78,10 +70,10 @@ class ShuffleView(APIView):
                 for group in groups:
                     hangout = {
                         "date": str(datetime.datetime.now().date()),
-                        "members": [1, 2]
+                        "members": group
                     }
                     data.append(hangout)
-                serializer = HangoutSerializer(data=data)
+                serializer = HangoutSerializer(data=data, many=True)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(
@@ -130,6 +122,13 @@ class HangoutView(generics.ListCreateAPIView):
     """A view for creating new hangouts and listing them."""
     queryset = Hangout.objects.all()
     serializer_class = HangoutSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        if "data" in kwargs:
+            data = kwargs["data"]
+            if isinstance(data, list):
+                kwargs["many"] = True
+        return super(HangoutView, self).get_serializer(*args, **kwargs)
 
 
 class HangoutDetailsView(generics.RetrieveUpdateDestroyAPIView):

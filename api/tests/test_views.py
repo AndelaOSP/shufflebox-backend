@@ -34,15 +34,15 @@ class UserViewTestCase(TestCase):
 class ShuffleViewTestCase(TestCase):
     """Test suite for the shuffling view."""
     def setUp(self):
-        User.objects.create(
+        User.objects.create_user(
             username="test_user0", email="user0@test.com"
         )
-        User.objects.create(
+        User.objects.create_user(
             username="test_user1", email="user1@test.com"
         )
         self.client = APIClient()
         self.hangout = {
-            'type': 'hangout', 'limit': 6,
+            'type': 'hangout', 'limit': 2,
         }
         self.brownbag = {
             "type": "brownbag", "limit": 1,
