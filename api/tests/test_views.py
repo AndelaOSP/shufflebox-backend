@@ -104,7 +104,18 @@ class BrownbagViewTestCase(InitTestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_api_can_update_presenter_status(self):
-        pass
+        """Tests that the API can update the status of a brownbag."""
+        res = self.client.post(
+            '/api/brownbag/', self.brownbag_data, format="json")
+        # change the status from next_in_line to done
+        new_data = {
+            "status": "done",
+            "date": res.data['date'],
+            "user_id": res.data['user_id']
+        }
+        res = self.client.put(
+            '/api/brownbag/{}/'.format(res.data['id']), new_data, format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
 class HangoutTestCase(InitTestCase):
