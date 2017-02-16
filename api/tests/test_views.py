@@ -94,10 +94,16 @@ class BrownbagViewTestCase(InitTestCase):
 
     def test_view_can_get_next_presenter(self):
         """Tests that the API can get the next brown bag presenter."""
-        pass
+        res = self.client.post(
+            '/api/brownbag/', self.brownbag_data, format="json")
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.content)
 
     def test_api_can_get_list_of_those_not_presented(self):
         """Tests that the API can list users who have never done a brownbag."""
+        res = self.client.get('/api/brownbag/', format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_api_can_update_presenter_status(self):
         pass
 
 
@@ -127,5 +133,5 @@ class SecretSantaViewTestCase(InitTestCase):
 
     def test_api_can_list_secretsanta(self):
         """Test that API can list all SecretSanta pairs."""
-        res = self.client.get('/api/hangout/', format="json")
+        res = self.client.get('/api/santa/', format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
