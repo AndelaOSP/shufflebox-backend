@@ -31,8 +31,7 @@ class UserViewTestCase(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
-class ShuffleViewTestCase(TestCase):
-    """Test suite for the shuffling view."""
+class InitTestCase(TestCase):
     def setUp(self):
         User.objects.create_user(
             username="test_user0", email="user0@test.com"
@@ -41,6 +40,7 @@ class ShuffleViewTestCase(TestCase):
             username="test_user1", email="user1@test.com"
         )
         self.client = APIClient()
+
         self.hangout = {
             'type': 'hangout', 'limit': 2,
         }
@@ -50,6 +50,10 @@ class ShuffleViewTestCase(TestCase):
         self.secretsanta = {
             "type": "secretsanta", "limit": 2,
         }
+
+
+class ShuffleViewTestCase(InitTestCase):
+    """Test suite for the shuffling view."""
 
     def test_view_can_generate_hangout_groups(self):
         res = self.client.post('/api/shuffle/', self.hangout, format="json")

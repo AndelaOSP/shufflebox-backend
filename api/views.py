@@ -92,8 +92,8 @@ class ShuffleView(APIView):
                 data = []
                 for pair in all_pairs:
                     # write each to the secretsanta model (msg queue perhaps?)
-                    if pair[2] is None:
-                        pair[2] = 1
+                    if pair[1] is None:
+                        pair[1] = 1
                     secretsanta = {
                         "date": str(datetime.datetime.now().date()),
                         "santa": pair[0],
@@ -101,7 +101,7 @@ class ShuffleView(APIView):
                     }
                     data.append(secretsanta)
 
-                serializer = SecretSantaSerializer(data=data)
+                serializer = SecretSantaSerializer(data=data, many=True)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(
