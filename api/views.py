@@ -60,12 +60,11 @@ class ShuffleView(APIView):
                 # Create hangout groups for the month
                 # dummy data simulated from the core module
                 #
-                group_size = request.data['limit']
                 users_queryset = User.objects.all().values_list(
                     'id', flat=True)
                 users = list(users_queryset)
                 rand = Randomizer(users)
-                groups = rand.create_groups(group_size)
+                groups = rand.create_groups(size)
                 data = []
                 for group in groups:
                     hangout = {
