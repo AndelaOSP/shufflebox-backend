@@ -114,7 +114,8 @@ class BrownbagViewTestCase(InitTestCase):
             "user_id": res.data['user_id']
         }
         res = self.client.put(
-            '/api/brownbag/{}/'.format(res.data['id']), new_data, format="json")
+            '/api/brownbag/{}/'.format(
+                res.data['id']), new_data, format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
@@ -131,6 +132,15 @@ class HangoutTestCase(InitTestCase):
         """Tests that API has hangout listing capability."""
         res = self.client.get('/api/hangout/', format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_api_can_get_single_hangout(self):
+        """Test that the API can retrieve a single hangout."""
+        req = self.client.post(
+            '/api/hangout/', self.hangout_data, format="json")
+        res = self.client.get(
+            '/api/hangout/{}/'.format(req.data['id']), format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.hangout_data['date'], res.data['date'])
 
 
 class SecretSantaViewTestCase(InitTestCase):
