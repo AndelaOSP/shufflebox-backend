@@ -119,7 +119,11 @@ class BrownbagTestCase(InitTestCase):
 
     def test_api_can_get_next_brownbag_presenter(self):
         """Test that the API can retrieve the next presenter"""
-        pass
+        req = res = self.client.post(
+            '/api/brownbag/', self.brownbag_data, format="json")
+        res = self.client.get('/api/brownbag/next/', format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.brownbag_data['status'], res.data['status'])
 
 
 class HangoutTestCase(InitTestCase):

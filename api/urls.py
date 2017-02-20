@@ -16,7 +16,7 @@ urlpatterns = {
     url(r'^brownbag/$', BrownbagView.as_view(), name="brownbag"),
     url(r'^brownbag/(?P<pk>[0-9]+)/$',
         BrownbagDetailsView.as_view(), name="brownbag_details"),
-    url(r'^brownbag/(?P<status>.+)/$', BrownbagNextInLineView.as_view()),
+    url(r'^brownbag/next/$', BrownbagNextInLineView.as_view()),
     url(r'^santa/$', SecretSantaView.as_view(), name="santa")
 }
 
