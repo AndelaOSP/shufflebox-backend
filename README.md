@@ -42,7 +42,7 @@ A Django-powered API for handling shufflebox consumption client requests
     Create a .env file and add the following:
     ```
     SECRET_KEY=<Your-Secret-Key>
-    DB_USER=posgres
+    DB_USER=<Your-username>
     DB_PASSWORD=<Your-password>
     ```
 
