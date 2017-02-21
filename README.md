@@ -51,7 +51,7 @@ A Django-powered API for handling shufflebox consumption client requests
 * #### Migrations
     On your psql console, create your database:
        ```
-       > CREATE DATABASE shufflebox;
+       > CREATE DATABASE core;
        ```
     Then, make your Migrations
        ```
