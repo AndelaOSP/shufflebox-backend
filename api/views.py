@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 import datetime
 from shufflebox import Randomizer
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core import serializers
 
 
 class UserView(generics.ListCreateAPIView):
@@ -147,6 +150,21 @@ class BrownbagDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """A view for retrieving, updating and deleting a brownbag instance."""
     queryset = BrownBag.objects.all()
     serializer_class = BrownbagSerializer
+
+
+class BrownBagUserListView(generics.ListAPIView):
+    """
+    A view for getting a list of users have not done brownbag
+    and are not next in line"""
+    serializer_class = User
+
+    def get(self, *args, **kwargs):
+        """
+        Return a list of users who haven't done brownbag yet.
+        """
+        results = User.objects.filter(profile__brownbag="not_done")
+        serializer = serializers.serialize('json', results)
+        return Response(serializer, status=status.HTTP_200_OK)
 
 
 class BrownbagNextInLineView(generics.ListAPIView):
