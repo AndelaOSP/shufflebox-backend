@@ -9,8 +9,6 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 import datetime
 from shufflebox import Randomizer
-import json
-from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 
 
