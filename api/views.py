@@ -154,15 +154,13 @@ class BrownBagUserListView(generics.ListAPIView):
     """
     A view for getting a list of users have not done brownbag
     and are not next in line"""
-    serializer_class = User
+    serializer_class = UserSerializer
 
-    def get(self, *args, **kwargs):
+    def get_queryset(self):
         """
         Return a list of users who haven't done brownbag yet.
         """
-        results = User.objects.filter(profile__brownbag="not_done")
-        serializer = serializers.serialize('json', results)
-        return Response(serializer, status=status.HTTP_200_OK)
+        return User.objects.filter(profile__brownbag="not_done")
 
 
 class BrownbagNextInLineView(generics.ListAPIView):
