@@ -6,10 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
-import datetime
 from shufflebox import Randomizer
-from django.core import serializers
+import datetime
 
 
 class UserView(generics.ListCreateAPIView):
@@ -153,7 +151,7 @@ class BrownbagDetailsView(generics.RetrieveUpdateDestroyAPIView):
 class BrownBagUserListView(generics.ListAPIView):
     """
     A view for getting a list of users have not done brownbag
-    and are not next in line"""
+    """
     serializer_class = UserSerializer
 
     def get_queryset(self):
