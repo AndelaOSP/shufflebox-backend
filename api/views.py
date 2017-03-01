@@ -190,7 +190,7 @@ class SecretSantaView(generics.ListCreateAPIView):
 class SecretSantaDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """A view for retrieving, updating and deleting a Secret santa instance."""
     queryset = SecretSanta.objects.all()
-    serializer_class = SecretSantaSerialize
+    serializer_class = SecretSantaSerializer
 
 
 @api_view(http_method_names=['POST'])
