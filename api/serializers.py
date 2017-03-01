@@ -52,17 +52,19 @@ class UserSerializer(serializers.ModelSerializer):
 class BrownbagSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the BrownBag model."""
 
+    user = UserSerializer()
+
     class Meta:
 
         model = BrownBag
-        fields = ('id', 'date', 'status', 'user_id')
+        fields = ('id', 'date', 'status', 'user')
 
 
 class HangoutSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the Hangout model."""
 
     members = UserSerializer(many=True)
-    
+
     class Meta:
 
         model = Hangout
