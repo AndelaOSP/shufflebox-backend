@@ -46,7 +46,7 @@ class ShuffleView(APIView):
                 data = {
                     "date": str(next_friday),
                     "status": "next_in_line",
-                    "user_id": next_brownbag_user
+                    "user": next_brownbag_user
                 }
                 serializer = BrownbagSerializer(data=data)
                 if serializer.is_valid():
@@ -178,5 +178,11 @@ class BrownbagNextInLineView(generics.ListAPIView):
 
 class SecretSantaView(generics.ListCreateAPIView):
     """A view for creating a new SecretSanta pair and listing all pairs."""
+    queryset = SecretSanta.objects.all()
+    serializer_class = SecretSantaSerializer
+
+
+class SecretSantaDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    """A view for retrieving, updating and deleting a Secret santa instance."""
     queryset = SecretSanta.objects.all()
     serializer_class = SecretSantaSerializer

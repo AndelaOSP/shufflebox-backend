@@ -54,7 +54,7 @@ class ModelTestCase(TestCase):
         """Test a BrownBag can be created."""
         self.count = BrownBag.objects.count()
         self.brownbag = BrownBag.objects.create(
-            date=self.date, status="not done", user_id=self.user)
+            date=self.date, status="not done", user=self.user)
         self.new_count = BrownBag.objects.count()
         self.assertNotEqual(self.count, self.new_count)
 

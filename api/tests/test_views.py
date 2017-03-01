@@ -60,7 +60,7 @@ class InitTestCase(TestCase):
         self.brownbag_data = {
             "date": str(datetime.datetime.now().date()),
             "status": "next_in_line",
-            "user_id": self.test_user0.id
+            "user": self.test_user0.id
         }
 
         self.secretsanta_data = {
@@ -95,7 +95,7 @@ class BrownbagTestCase(InitTestCase):
     def test_api_can_create_next_brownbag_presenter(self):
         """Tests that the API can get the next brown bag presenter."""
         res = self.client.post(
-            '/api/brownbag/', self.brownbag_data, format="json")
+            '/api/brownbags/', self.brownbag_data, format="json")
         self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.content)
 
     def test_api_can_get_list_of_those_not_presented(self):
@@ -105,23 +105,23 @@ class BrownbagTestCase(InitTestCase):
     def test_api_can_update_presenter_status(self):
         """Tests that the API can update the status of a brownbag."""
         res = self.client.post(
-            '/api/brownbag/', self.brownbag_data, format="json")
+            '/api/brownbags/', self.brownbag_data, format="json")
         # change the status from next_in_line to done
         new_data = {
             "status": "done",
             "date": res.data['date'],
-            "user_id": res.data['user_id']
+            "user": res.data['user']
         }
         res = self.client.put(
-            '/api/brownbag/{}/'.format(
+            '/api/brownbags/{}/'.format(
                 res.data['id']), new_data, format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_api_can_get_next_brownbag_presenter(self):
         """Test that the API can retrieve the next presenter"""
-        req = res = self.client.post(
-            '/api/brownbag/', self.brownbag_data, format="json")
-        res = self.client.get('/api/brownbag/next/', format="json")
+        req = self.client.post(
+            '/api/brownbags/', self.brownbag_data, format="json")
+        res = self.client.get('/api/brownbags/next/', format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(self.brownbag_data['status'], res.data['status'])
 
@@ -132,20 +132,20 @@ class HangoutTestCase(InitTestCase):
     def test_api_can_create_hangout(self):
         """Tests that API has hangouts creation capability."""
         res = self.client.post(
-            '/api/hangout/', self.hangout_data, format="json")
+            '/api/hangouts/', self.hangout_data, format="json")
         self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.content)
 
     def test_api_can_list_all_hangouts(self):
         """Tests that API has hangout listing capability."""
-        res = self.client.get('/api/hangout/', format="json")
+        res = self.client.get('/api/hangouts/', format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_api_can_get_single_hangout(self):
         """Test that the API can retrieve a single hangout."""
         req = self.client.post(
-            '/api/hangout/', self.hangout_data, format="json")
+            '/api/hangouts/', self.hangout_data, format="json")
         res = self.client.get(
-            '/api/hangout/{}/'.format(req.data['id']), format="json")
+            '/api/hangouts/{}/'.format(req.data['id']), format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(self.hangout_data['date'], res.data['date'])
 
@@ -156,19 +156,19 @@ class SecretSantaViewTestCase(InitTestCase):
     def test_api_can_create_secretsanta(self):
         """Test that API can create a SecretSanta."""
         res = self.client.post(
-            '/api/santa/', self.secretsanta_data, format="json")
+            '/api/santas/', self.secretsanta_data, format="json")
         self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.content)
 
     def test_api_can_list_secretsanta(self):
         """Test that API can list all SecretSanta pairs."""
-        res = self.client.get('/api/santa/', format="json")
+        res = self.client.get('/api/santas/', format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_api_can_get_single_secretsanta_pair(self):
         """Test that the API can retrieve a single hangout."""
         req = self.client.post(
-            '/api/hangout/', self.hangout_data, format="json")
+            '/api/hangouts/', self.hangout_data, format="json")
         res = self.client.get(
-            '/api/hangout/{}/'.format(req.data['id']), format="json")
+            '/api/hangouts/{}/'.format(req.data['id']), format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(self.hangout_data['date'], res.data['date'])

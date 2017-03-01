@@ -2,7 +2,7 @@ from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import UserView, ProfileView, ShuffleView, HangoutView, \
     BrownbagView, SecretSantaView, HangoutDetailsView, BrownbagDetailsView, \
-    BrownbagNextInLineView, BrownBagUserListView
+    BrownbagNextInLineView, BrownBagUserListView, SecretSantaDetailsView
 
 
 urlpatterns = {
@@ -10,15 +10,17 @@ urlpatterns = {
     url(r'users/(?P<pk>[0-9]+)/$',
         ProfileView.as_view(), name="profile"),
     url(r'^shuffle/', ShuffleView.as_view()),
-    url(r'^hangout/$', HangoutView.as_view(), name="hangout"),
-    url(r'^hangout/(?P<pk>[0-9]+)/$',
+    url(r'^hangouts/$', HangoutView.as_view(), name="hangout"),
+    url(r'^hangouts/(?P<pk>[0-9]+)/$',
         HangoutDetailsView.as_view(), name="hangout_details"),
-    url(r'^brownbag/$', BrownbagView.as_view(), name="brownbag"),
-    url(r'^brownbag/(?P<pk>[0-9]+)/$',
+    url(r'^brownbags/$', BrownbagView.as_view(), name="brownbag"),
+    url(r'^brownbags/(?P<pk>[0-9]+)/$',
         BrownbagDetailsView.as_view(), name="brownbag_details"),
-    url(r'^brownbag/next/$', BrownbagNextInLineView.as_view()),
-    url(r'brownbag/not_presented/', BrownBagUserListView.as_view()),
-    url(r'^santa/$', SecretSantaView.as_view(), name="santa")
+    url(r'^brownbags/next/$', BrownbagNextInLineView.as_view()),
+    url(r'brownbags/not_presented/', BrownBagUserListView.as_view()),
+    url(r'^santas/$', SecretSantaView.as_view(), name="santa"),
+    url(r'^santas/(?P<pk>[0-9]+)/$',
+        SecretSantaDetailsView.as_view(), name="santa_details")
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)
