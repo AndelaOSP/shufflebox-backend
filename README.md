@@ -73,5 +73,33 @@ A Django-powered API for handling shufflebox consumption client requests
       http://localhost:8000/
     ```
 
+###Available Endpoints
+
+| Endpoint | Description |
+| ---- | --------------- |
+| [POST /api/shuffle/](#) | Shuffle according to request. Request contains **_"type"_**:("hangout" or "brownbag" or "santa") and **_"limit"_**: (Integer) in raw json format|
+|
+| [GET /api/users/](#) | Get a list of users. |
+| [GET /api/users/:id](#) | Get a single profile for a user using a user ID. |
+|   |
+| [POST /api/brownbags/](#) | Create a single brownbag. Request should have **_date_**, **_status_** and **_user_id_** in form data |
+| [GET /api/brownbags/](#) | Get a list of all created brownbags, inclusive of the one next-in-line. |
+| [GET /api/brownbags/:id](#) | Get a single brownbag. |
+| [PUT /api/brownbags/:id](#) | Update a single brownbag. |
+| [DELETE /api/brownbags/:id](#) | Delete a single brownbag. |
+| [GET /api/brownbags/next/](#) | Get the next brownbag presenter. |
+| [GET /api/brownbags/not_presented/](#) | Get all users who have not presented a brownbag. |
+|   |
+| [POST /api/hangouts/](#) | Create a single hangout group. Request should have _date_ and _members_ in form or raw json data. |
+| [GET /api/hangouts/](#) | Get all created hangout groups. |
+| [GET /api/hangouts/:id](#) | Get a single hangout group using its id. |
+| [PUT /api/hangouts/:id](#) | Update a single hangout group. Request should have _date_ and _members_ in form or raw json data. |
+| [DELETE /api/hangouts/:id](#) | Delete a single hangout group. |
+|   |
+| [POST /api/santa/](#) | Creat a single Secret Santa pair. |
+| [GET /api/santa/](#) | Get a list of all Secret Santa pairs. |
+| [GET /api/santa/:id](#) | Get a single Secret Santa pair. |
+
+
 ## Contributing
 TBD

@@ -69,11 +69,11 @@ class BrownBag(models.Model):
     date = models.DateField(blank=True)
     status = models.CharField(
         max_length=12, choices=brownbag_choices, default=NOT_DONE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         """Return a string representation of the model instance."""
-        return "{} Status: {}".format(self.user_id, self.status)
+        return "{} Status: {}".format(self.user, self.status)
 
 
 class Hangout(models.Model):
