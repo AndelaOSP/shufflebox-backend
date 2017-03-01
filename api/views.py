@@ -46,7 +46,7 @@ class ShuffleView(APIView):
                 data = {
                     "date": str(next_friday),
                     "status": "next_in_line",
-                    "user_id": next_brownbag_user
+                    "user": next_brownbag_user
                 }
                 serializer = BrownbagSerializer(data=data)
                 if serializer.is_valid():

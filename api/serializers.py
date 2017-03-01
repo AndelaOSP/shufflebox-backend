@@ -52,8 +52,6 @@ class UserSerializer(serializers.ModelSerializer):
 class BrownbagSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the BrownBag model."""
 
-    user = UserSerializer()
-
     class Meta:
 
         model = BrownBag
@@ -63,7 +61,7 @@ class BrownbagSerializer(serializers.ModelSerializer):
 class HangoutSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the Hangout model."""
 
-    members = UserSerializer(many=True)
+    # members = UserSerializer(many=True)
 
     class Meta:
 
