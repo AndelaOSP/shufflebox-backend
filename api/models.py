@@ -79,11 +79,14 @@ class BrownBag(models.Model):
 class Hangout(models.Model):
     """Class definition for the Hangout model."""
     date = models.DateField()
-    members = models.ManyToManyField(User)
+    members = models.ManyToManyField(User, related_name="members")
 
     def __str__(self):
         """Return a string representation of the model instance."""
         return "Hangout: {}, Members: {}".format(self.pk, self.members.all())
+
+    def __unicode__(self):
+        return self.members
 
 
 class SecretSanta(models.Model):
