@@ -61,6 +61,8 @@ class BrownbagSerializer(serializers.ModelSerializer):
 class HangoutSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the Hangout model."""
 
+    members = UserSerializer(many=True)
+    
     class Meta:
 
         model = Hangout
