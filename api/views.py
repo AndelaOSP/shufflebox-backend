@@ -180,3 +180,9 @@ class SecretSantaView(generics.ListCreateAPIView):
     """A view for creating a new SecretSanta pair and listing all pairs."""
     queryset = SecretSanta.objects.all()
     serializer_class = SecretSantaSerializer
+
+
+class SecretSantaDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    """A view for retrieving, updating and deleting a Secret santa instance."""
+    queryset = SecretSanta.objects.all()
+    serializer_class = SecretSantaSerializer
