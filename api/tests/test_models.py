@@ -1,5 +1,5 @@
 from django.test import TestCase
-from api.models import Profile, BrownBag, Hangout, SecretSanta
+from api.models import Profile, BrownBag, Hangout, SecretSanta, Group
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from datetime import datetime
@@ -35,20 +35,25 @@ class ModelTestCase(TestCase):
             Profile.objects.create(user=self.user)
 
     def test_hangout_creation(self):
-        """Test a hangout group can be created"""
+        """Test a hangout can be created"""
         self.count = Hangout.objects.count()
         self.hangout = Hangout.objects.create(date=self.date)
         self.new_count = Hangout.objects.count()
         self.assertNotEqual(self.count, self.new_count)
 
-    def test_adding_members_to_a_hangout(self):
-        """Test that a hangout can add members."""
-        self.count = Hangout.objects.count()
-        self.hangout = Hangout.objects.create(date=self.date)
-        self.count = self.hangout.members.count()
-        self.hangout.members.add(self.user)
-        self.new_count = self.hangout.members.count()
-        self.assertNotEqual(self.count, self.new_count)
+    def test_adding_members_to_a_hangout_group(self):
+        """Test that we can add members to hangout groups."""
+        hangout = Hangout.objects.create(date=self.date)
+
+        group = Group.objects.create(hangout=hangout)
+        self.assertFalse(group.members.exists())
+        group.members.add(self.user)
+        self.assertTrue(group.members.exists())
+
+        self.assertEqual(hangout.groups.count(), 1)
+        self.assertEqual(hangout.groups.first().id, group.id)
+
+        hangout.delete()
 
     def test_brownbag_creation(self):
         """Test a BrownBag can be created."""
