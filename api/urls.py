@@ -2,8 +2,7 @@ from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import UserView, ProfileView, ShuffleView, HangoutView, \
     BrownbagView, SecretSantaView, HangoutDetailsView, BrownbagDetailsView, \
-    BrownbagNextInLineView, BrownBagUserListView, SecretSantaDetailsView, \
-    generate_token
+    BrownbagNextInLineView, BrownBagUserListView, SecretSantaDetailsView
 
 
 urlpatterns = {
@@ -21,8 +20,7 @@ urlpatterns = {
     url(r'brownbags/not_presented/', BrownBagUserListView.as_view()),
     url(r'^santas/$', SecretSantaView.as_view(), name="santa"),
     url(r'^santas/(?P<pk>[0-9]+)/$',
-        SecretSantaDetailsView.as_view(), name="santa_details"),
-    url(r'^auth/(?P<backend>[^/]+)/$', generate_token, name="social"),
+        SecretSantaDetailsView.as_view(), name="santa_details")
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)
