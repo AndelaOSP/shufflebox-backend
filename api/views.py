@@ -1,15 +1,10 @@
 from .models import BrownBag, Hangout, SecretSanta, Profile
 from .serializers import UserSerializer, ProfileSerializer, \
-    BrownbagSerializer, HangoutSerializer, SecretSantaSerializer, \
-    SocialAuthSerializer
+    BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 from rest_framework import generics, status
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.exceptions import ParseError
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
 from rest_framework.views import APIView
-from social_django.utils import psa
+from rest_framework.response import Response
+from rest_framework.exceptions import ParseError
 from django.contrib.auth.models import User
 from shufflebox import Randomizer
 import datetime
@@ -191,22 +186,3 @@ class SecretSantaDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """A view for retrieving, updating and deleting a Secret santa instance."""
     queryset = SecretSanta.objects.all()
     serializer_class = SecretSantaSerializer
-
-
-@api_view(http_method_names=['POST'])
-@permission_classes([AllowAny])
-@psa()
-def generate_token(request, backend):
-    serializer = SocialAuthSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        user = request.backend.do_auth(
-            serializer.validated_data['access_token'])
-
-        if user:
-            token, _ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key})
-        else:
-            return Response({
-                'errors': {'token': 'Invalid token'}},
-                status=status.HTTP_400_BAD_REQUEST
-            )
