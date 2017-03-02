@@ -76,11 +76,3 @@ class SecretSantaSerializer(serializers.ModelSerializer):
 
         model = SecretSanta
         fields = ('id', 'date', 'santa', 'giftee')
-
-
-class SocialAuthSerializer(serializers.Serializer):
-    """This class defines a serializer which handles OAuth2 access tokens."""
-    access_token = serializers.CharField(
-        allow_blank=False,
-        trim_whitespace=True
-    )
