@@ -78,15 +78,21 @@ class BrownBag(models.Model):
 
 class Hangout(models.Model):
     """Class definition for the Hangout model."""
-    date = models.DateField()
-    members = models.ManyToManyField(User, related_name="members")
+    date = models.DateField(unique=True)
 
     def __str__(self):
         """Return a string representation of the model instance."""
-        return "Hangout: {}, Members: {}".format(self.pk, self.members.all())
+        return str(self.date)
 
-    def __unicode__(self):
-        return self.members
+
+class Group(models.Model):
+    """Class definition for a hangout group."""
+    members = models.ManyToManyField(User, related_name="group")
+    hangout = models.ForeignKey(Hangout, related_name="groups", on_delete=models.CASCADE)
+
+    def __str__(self):
+        """Return a string representation of the model instance"""
+        return "{}".format(self.pk)
 
 
 class SecretSanta(models.Model):
