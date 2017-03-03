@@ -1,13 +1,25 @@
-from .models import BrownBag, Hangout, SecretSanta, Profile
-from .serializers import UserSerializer, ProfileSerializer, \
-    BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
-from rest_framework import generics, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.exceptions import ParseError
-from django.contrib.auth.models import User
-from shufflebox import Randomizer
+import json
+import calendar
 import datetime
+import functools
+
+from shufflebox import Randomizer
+from dateutil.relativedelta import relativedelta, FR
+
+from django.db import IntegrityError
+from django.contrib.auth.models import User
+from rest_framework.views import APIView
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
+
+from .models import BrownBag, Hangout, SecretSanta, Group
+from .serializers import (
+    UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
+)
+
+
+HANGOUT_GROUPS_LIMIT = 10
 
 
 class UserView(generics.ListCreateAPIView):
@@ -31,7 +43,6 @@ class ShuffleView(APIView):
         """
         try:
             request_type = request.data['type']
-            size = request.data['limit']
 
             if request_type == "brownbag":
                 # Get all users IDs elligible for brownbag
@@ -58,27 +69,18 @@ class ShuffleView(APIView):
 
             elif request_type == "hangout":
                 # Create hangout groups for the month
-                # dummy data simulated from the core module
-                #
-                users_queryset = User.objects.all().values_list(
-                    'id', flat=True)
-                users = list(users_queryset)
-                rand = Randomizer(users)
-                groups = rand.create_groups(size)
-                data = []
-                for group in groups:
-                    hangout = {
-                        "date": str(datetime.datetime.now().date()),
-                        "members": group
-                    }
-                    data.append(hangout)
-                serializer = HangoutSerializer(data=data, many=True)
-                if serializer.is_valid():
-                    serializer.save()
+                size = request.data.get('limit', HANGOUT_GROUPS_LIMIT)
+                try:
+                    data = create_hangout(groups_size=size)
+                except IntegrityError:
                     return Response(
-                        serializer.data, status=status.HTTP_201_CREATED)
-                return Response(
-                    serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        {'message': 'Hangout groups for this month were already created.'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                except Exception as e:
+                    return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response(data, status=status.HTTP_201_CREATED)
 
             elif request_type == "secretsanta":
                 # Create all secretsanta pairs for that year
@@ -124,17 +126,54 @@ class ShuffleView(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 
-class HangoutView(generics.ListCreateAPIView):
-    """A view for creating new hangouts and listing them."""
+def last_friday_of_month(from_date):
+    """Return the date of the last Friday of the month, for a given date"""
+    year = from_date.year
+    month = from_date.month
+    month_start = datetime.date(year, month, 1)
+    return month_start + relativedelta(
+        days=calendar.monthrange(year, month)[1],
+        weekday=FR(-1)
+    )
+
+
+def render_json(serializer_class):
+    """Intercept a model instance and return JSON rendered using a specific serializer class"""
+    def wrapper(func):
+        @functools.wraps(func)
+        def wrapped(*args, **kwargs):
+            result = func(*args, **kwargs)
+            serializer = serializer_class(result)
+            rendered = JSONRenderer().render(serializer.data)
+            return json.loads(rendered)
+        return wrapped
+    return wrapper
+
+
+@render_json(HangoutSerializer)
+def create_hangout(*, groups_size=HANGOUT_GROUPS_LIMIT):
+    """
+    Create a hangout with groups of a particular size.
+
+    Each hangout is dated the last Friday of the current month.
+    """
+    users_queryset = User.objects.all().values_list('id', flat=True)
+    rand = Randomizer(list(users_queryset))
+    groups = rand.create_groups(groups_size)
+
+    hangout = Hangout.objects.create(date=last_friday_of_month(datetime.datetime.now()))
+    for group in groups:
+        g = Group.objects.create(hangout=hangout)
+        for member in group:
+            if member:
+                g.members.add(member)
+    return hangout
+
+
+class HangoutView(generics.ListAPIView):
+    """A view for listing hangouts."""
     queryset = Hangout.objects.all()
     serializer_class = HangoutSerializer
-
-    def get_serializer(self, *args, **kwargs):
-        if "data" in kwargs:
-            data = kwargs["data"]
-            if isinstance(data, list):
-                kwargs["many"] = True
-        return super(HangoutView, self).get_serializer(*args, **kwargs)
 
 
 class HangoutDetailsView(generics.RetrieveUpdateDestroyAPIView):
