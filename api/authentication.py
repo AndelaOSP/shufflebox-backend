@@ -4,6 +4,7 @@ from rest_framework.authentication import BaseAuthentication, \
     get_authorization_header
 from django.contrib.auth.models import User
 from rest_framework import exceptions
+from jwt.exceptions import InvalidTokenError
 import jwt
 
 
@@ -40,8 +41,13 @@ class CustomTokenAuthentication(BaseAuthentication):
                 '{}'.format(token_format))
             return None
         self.token = auth[1]
-        payload = jwt.decode(self.token, verify=False)
-        return self.authenticate_credentials(payload)
+        try:
+            payload = jwt.decode(self.token, verify=False)
+            return self.authenticate_credentials(payload)
+        except InvalidTokenError:
+            raise exceptions.AuthenticationFailed(
+                'Invalid token. Please provide a valid token:')
+            return None
 
     def authenticate_credentials(self, payload):
         """Checks for the User object associated with the user_info payload.
