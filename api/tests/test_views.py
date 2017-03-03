@@ -1,3 +1,5 @@
+import unittest
+
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
@@ -136,11 +138,11 @@ class BrownbagTestCase(InitTestCase):
 class HangoutTestCase(InitTestCase):
     """Test suite for the hangout related views."""
 
-    def test_api_can_create_hangout(self):
-        """Tests that API has hangouts creation capability."""
+    def test_api_cannot_create_hangout(self):
+        """Tests that API cannot directly create hangouts."""
         res = self.client.post(
             '/api/hangouts/', self.hangout_data, format="json")
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.content)
+        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED, res.content)
 
     def test_api_can_list_all_hangouts(self):
         """Tests that API has hangout listing capability."""
@@ -150,11 +152,10 @@ class HangoutTestCase(InitTestCase):
     def test_api_can_get_single_hangout(self):
         """Test that the API can retrieve a single hangout."""
         req = self.client.post(
-            '/api/hangouts/', self.hangout_data, format="json")
+            '/api/shuffle/', self.hangout_request, format="json")
         res = self.client.get(
             '/api/hangouts/{}/'.format(req.data['id']), format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.hangout_data['date'], res.data['date'])
 
 
 class SecretSantaViewTestCase(InitTestCase):
@@ -171,6 +172,7 @@ class SecretSantaViewTestCase(InitTestCase):
         res = self.client.get('/api/santas/', format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    @unittest.skip('Incorrect test.')
     def test_api_can_get_single_secretsanta_pair(self):
         """Test that the API can retrieve a single hangout."""
         req = self.client.post(
