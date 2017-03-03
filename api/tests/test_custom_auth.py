@@ -9,7 +9,7 @@ AUTH_HEADER = 'JWT ' + AUTH_TOKEN
 
 
 class AuthenticationTestCase(APITestCase):
-    """TestCase for the custom token authentication module""""
+    """TestCase for the custom token authentication module."""
 
     def test_user_can_be_authenticated_with_a_token(self):
         """Test user can be authenticated with a token."""
