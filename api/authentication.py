@@ -1,6 +1,5 @@
-"""
-Authenticates JWT Tokens passed in from the front end.
-"""
+"""Authenticates JWT Tokens passed in from the front end."""
+
 from rest_framework.authentication import BaseAuthentication, \
     get_authorization_header
 from django.contrib.auth.models import User
@@ -21,6 +20,18 @@ class CustomTokenAuthentication(BaseAuthentication):
     token = ''
 
     def authenticate(self, request):
+        """Decodes the token in the Authorization header.
+
+        Extracts the token from the Authorization header in the request
+        for decoding. Raises an exception if none exists.
+
+        Arguments:
+            request: The request containing the Authorization Header.
+
+        Returns:
+            The authenticated user object and the associated token.
+        """
+
         auth = get_authorization_header(request).split()
         token_format = 'JWT <your token here>'
         if not auth or auth[0].lower() != self.keyword.lower().encode():
@@ -28,14 +39,22 @@ class CustomTokenAuthentication(BaseAuthentication):
                 'Invalid. The Authorization Header should look as follows:'
                 '{}'.format(token_format))
             return None
-        token = auth[1]
-        return self.authenticate_credentials(token)
+        self.token = auth[1]
+        payload = jwt.decode(self.token, verify=False)
+        return self.authenticate_credentials(payload)
 
-    def authenticate_credentials(self, token):
-        return self.verify_token(token)
+    def authenticate_credentials(self, payload):
+        """Checks for the User object associated with the user_info payload.
 
-    def verify_token(self, token):
-        payload = jwt.decode(token, verify=False)
+        Get a user whose username matches the one in the payload or create a
+        new User if none exists.
+
+        Arguments:
+            token: The token to decode
+
+        Returns:
+            A tuple with the associated User object and the token."""
+
         user = None
         if payload:
             user_info = payload['UserInfo']
@@ -45,7 +64,4 @@ class CustomTokenAuthentication(BaseAuthentication):
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
                 user = User.objects.create(username=username, email=email)
-        return user, token
-
-    def authenticate_header(self, request):
-        return self.keyword
+        return (user, self.token)
