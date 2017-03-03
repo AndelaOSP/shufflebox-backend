@@ -91,13 +91,20 @@ class ShuffleView(APIView):
                 data = []
                 for pair in all_pairs:
                     # write each to the secretsanta model (msg queue perhaps?)
-                    if pair[1] is None:
-                        pair[1] = 1
-                    secretsanta = {
-                        "date": str(datetime.datetime.now().date()),
-                        "santa": pair[0],
-                        "giftee": pair[1]
-                    }
+                    if pair[1] is not None:
+                        secretsanta = {
+                            "date": str(datetime.datetime.now().date()),
+                            "santa": pair[0],
+                            "giftee": pair[1]
+                        }
+                    else:
+                        # In the event of a pending/ unpaired user
+                        # Default to admin user as the giftee
+                        secretsanta = {
+                            "date": str(datetime.datetime.now().date()),
+                            "santa": pair[0],
+                            "giftee": 1
+                        }
                     data.append(secretsanta)
 
                 serializer = SecretSantaSerializer(data=data, many=True)
@@ -113,7 +120,7 @@ class ShuffleView(APIView):
                     status=status.HTTP_400_BAD_REQUEST)
         except KeyError:
             return Response(
-                "Bad Request: Missing Key 'type'",
+                "Bad Request: Missing Either 'type' or 'limit' ",
                 status=status.HTTP_400_BAD_REQUEST)
 
 
