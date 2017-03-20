@@ -50,7 +50,8 @@ class ModelTestCase(TestCase):
         group.members.add(self.user)
         self.assertTrue(group.members.exists())
         self.assertEqual(group.members.count(), 1)
-
+        hangout.delete()
+        
     def test_brownbag_creation(self):
         """Test a BrownBag can be created."""
         self.count = BrownBag.objects.count()
