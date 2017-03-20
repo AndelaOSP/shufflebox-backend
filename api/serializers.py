@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Profile, BrownBag, SecretSanta, Hangout
+from .models import Profile, BrownBag, SecretSanta, Group, Hangout
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -58,15 +58,26 @@ class BrownbagSerializer(serializers.ModelSerializer):
         fields = ('id', 'date', 'status', 'user')
 
 
+class GroupSerializer(serializers.ModelSerializer):
+    """This class defines a serializer for the Group model."""
+
+    members = UserSerializer(many=True)
+
+    class Meta:
+
+        model = Group
+        field = ('id', 'members')
+
+
 class HangoutSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the Hangout model."""
 
-    # members = UserSerializer(many=True)
+    groups = GroupSerializer(many=True, read_only=True)
 
     class Meta:
 
         model = Hangout
-        fields = ('id', 'date', 'members')
+        fields = ('id', 'date', 'groups')
 
 
 class SecretSantaSerializer(serializers.ModelSerializer):
