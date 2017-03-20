@@ -4,6 +4,8 @@ from rest_framework import status
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 import datetime
+from api.models import Hangout
+from api.views import last_friday
 
 
 class UserViewTestCase(TestCase):
@@ -43,7 +45,7 @@ class InitTestCase(TestCase):
         self.client = APIClient()
 
         self.hangout_request = {
-            'type': 'hangout', 'limit': 2,
+            'type': 'hangout', 'limit': 1,
         }
         self.brownbag_request = {
             "type": "brownbag", "limit": 1,
@@ -53,8 +55,7 @@ class InitTestCase(TestCase):
         }
 
         self.hangout_data = {
-            "date": str(datetime.datetime.now().date()),
-            "members": [self.test_user0.id, self.test_user1.id]
+            "date": str(last_friday(datetime.datetime.now().date()))
         }
 
         self.brownbag_data = {
@@ -129,11 +130,12 @@ class BrownbagTestCase(InitTestCase):
 class HangoutTestCase(InitTestCase):
     """Test suite for the hangout related views."""
 
-    def test_api_can_create_hangout(self):
-        """Tests that API has hangouts creation capability."""
+    def test_api_cannot_create_hangout(self):
+        """Tests that the API is forbidden to create hangouts directly."""
         res = self.client.post(
             '/api/hangouts/', self.hangout_data, format="json")
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.content)
+        self.assertEqual(
+            res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED, res.content)
 
     def test_api_can_list_all_hangouts(self):
         """Tests that API has hangout listing capability."""
@@ -143,11 +145,15 @@ class HangoutTestCase(InitTestCase):
     def test_api_can_get_single_hangout(self):
         """Test that the API can retrieve a single hangout."""
         req = self.client.post(
-            '/api/hangouts/', self.hangout_data, format="json")
+            '/api/shuffle/', self.hangout_request, format="json")
+        print(req.data)
         res = self.client.get(
             '/api/hangouts/{}/'.format(req.data['id']), format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.hangout_data['date'], res.data['date'])
+        self.assertEqual(
+            self.hangout_data['date'],
+            str(last_friday(datetime.datetime.now().date()))
+        )
 
 
 class SecretSantaViewTestCase(InitTestCase):
@@ -165,10 +171,10 @@ class SecretSantaViewTestCase(InitTestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_api_can_get_single_secretsanta_pair(self):
-        """Test that the API can retrieve a single hangout."""
+        """Test that the API can retrieve a single pair of secretsanta."""
         req = self.client.post(
-            '/api/hangouts/', self.hangout_data, format="json")
+            '/api/santas/', self.secretsanta_data, format="json")
         res = self.client.get(
-            '/api/hangouts/{}/'.format(req.data['id']), format="json")
+            '/api/santas/{}/'.format(req.data['id']), format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.hangout_data['date'], res.data['date'])
+        self.assertEqual(self.secretsanta_data['date'], res.data['date'])
