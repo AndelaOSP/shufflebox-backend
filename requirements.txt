@@ -20,13 +20,15 @@ psycopg2==2.6.2
 Pygments==2.2.0
 PyJWT==1.4.2
 pypi-publisher==0.0.4
+python-dateutil==2.6.0
 python-dotenv==0.6.2
 python-openid==2.2.5
 python3-openid==3.0.10
 pytz==2016.10
 requests==2.13.0
 requests-oauthlib==0.7.0
-git+git://github.com/AndelaOSP/shufflebox.git
+-e git+git@github.com:AndelaOSP/shufflebox.git@171e2da11538c59f6b7d8f016764c2c28c2ba109#egg=shufflebox-develop
+six==1.10.0
 smmap==0.9.0
 snowballstemmer==1.2.1
 social-auth-app-django==1.0.1
