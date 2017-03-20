@@ -4,8 +4,12 @@ from rest_framework import status
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 import datetime
+
 from api.models import Hangout
 from api.views import last_friday
+import os
+
+AUTH_TOKEN = 'JWT ' + os.getenv('JWT_TOKEN')
 
 
 class UserViewTestCase(TestCase):
@@ -21,6 +25,7 @@ class UserViewTestCase(TestCase):
                 'avatar': "a_long_string.png"
             }
         }
+        self.client.credentials(HTTP_AUTHORIZATION=AUTH_TOKEN)
         self.response = self.client.post(
             '/api/users/', self.user_data, format="json")
 
@@ -42,8 +47,11 @@ class InitTestCase(TestCase):
         self.test_user1 = User.objects.create_user(
             username="test_user1", email="user1@test.com"
         )
+        self.test_user2 = User.objects.create_user(
+            username="test_user2", email="user2@test.com"
+        )
         self.client = APIClient()
-
+        self.client.credentials(HTTP_AUTHORIZATION=AUTH_TOKEN)
         self.hangout_request = {
             'type': 'hangout', 'limit': 1,
         }
