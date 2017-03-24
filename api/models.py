@@ -21,7 +21,7 @@ class Brownbag(models.Model):
     date = models.DateField(blank=True)
     status = models.CharField(
         max_length=12, choices=brownbag_choices, default=NOT_DONE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         """Return a string representation of the model instance."""
@@ -38,7 +38,6 @@ class Profile(models.Model):
     avatar = models.CharField(max_length=255, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     bio = models.TextField(default="", max_length=500, blank=True)
-    brownbag = models.OneToOneField(Brownbag, on_delete=models.CASCADE)
 
     def __unicode__(self):
         return u'User Profile for: {}'.format(self.user.username)
