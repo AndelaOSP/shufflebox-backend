@@ -46,7 +46,7 @@ class ShuffleView(APIView):
             if request_type == "brownbag":
                 # Get all users IDs elligible for brownbag
                 users_queryset = User.objects.filter(
-                    profile__brownbag="not_done").values_list('id', flat=True)
+                    brownbag__isnull=True).values_list('id', flat=True)
                 users = list(users_queryset)
                 rand = Randomizer(users)
                 next_brownbag_user = rand.get_random()
