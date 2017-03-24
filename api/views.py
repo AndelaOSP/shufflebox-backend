@@ -1,4 +1,4 @@
-from .models import BrownBag, Hangout, SecretSanta, Profile, Group
+from .models import Brownbag, Hangout, SecretSanta, Profile, Group
 from .serializers import (
   UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 )
@@ -181,18 +181,18 @@ class HangoutDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class BrownbagView(generics.ListCreateAPIView):
-    """A view for creating new BrownBags and listing them."""
-    queryset = BrownBag.objects.all()
+    """A view for creating new Brownbags and listing them."""
+    queryset = Brownbag.objects.all()
     serializer_class = BrownbagSerializer
 
 
 class BrownbagDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """A view for retrieving, updating and deleting a brownbag instance."""
-    queryset = BrownBag.objects.all()
+    queryset = Brownbag.objects.all()
     serializer_class = BrownbagSerializer
 
 
-class BrownBagUserListView(generics.ListAPIView):
+class BrownbagUserListView(generics.ListAPIView):
     """
     A view for getting a list of users have not done brownbag
     """
@@ -213,7 +213,7 @@ class BrownbagNextInLineView(generics.ListAPIView):
         """
         Return the brownbag entry as determined by status portion of the URL.
         """
-        result = BrownBag.objects.filter(
+        result = Brownbag.objects.filter(
             status="next_in_line").latest('status')
         serializer = BrownbagSerializer(result)
 
