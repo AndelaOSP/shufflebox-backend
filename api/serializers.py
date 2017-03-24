@@ -9,7 +9,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Profile
-        fields = ('avatar', 'birth_date', 'bio', 'brownbag')
+        fields = ('avatar', 'birth_date', 'bio')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -51,7 +51,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class BrownbagSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the Brownbag model."""
-
+    # user = UserSerializer()
     class Meta:
 
         model = Brownbag
