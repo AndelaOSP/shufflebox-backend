@@ -48,21 +48,27 @@ class ShuffleView(APIView):
                     brownbag_data = create_brownbag(datetime.date.today())
                 except IntegrityError:
                     # There exists a brownbag this Friday, create for next one
-                    latest_brownbag = Brownbag.objects.latest('date')
                     # Use latest friday as seed date to create next brownbag
-                    try:
-                        new_brownbag = create_brownbag(latest_brownbag.date)
-                    except Exception as e:
-                        return Response(
-                            e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    latest_brownbag = Brownbag.objects.latest('date')
+                    brownbag_data = create_brownbag(latest_brownbag.date)
+                    serializer = BrownbagSerializer(brownbag_data)
+                    rendered = JSONRenderer().render(serializer.data)
+                    data = json.loads(rendered.decode())
                     return Response(
-                        new_brownbag, status=status.HTTP_201_CREATED)
+                        data, status=status.HTTP_201_CREATED)
+                except IndexError as e:
+                    return Response(
+                        {'error': e.args[0]},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 except Exception as e:
                     return Response(
-                        {'error': e}, status=status.HTTP_400_BAD_REQUEST)
+                        {'error': e.args}, status=status.HTTP_400_BAD_REQUEST)
                 else:
+                    serializer = BrownbagSerializer(brownbag_data)
+                    rendered = JSONRenderer().render(serializer.data)
+                    data = json.loads(rendered.decode())
                     return Response(
-                        brownbag_data, status=status.HTTP_201_CREATED)
+                        data, status=status.HTTP_201_CREATED)
 
             elif request_type == "hangout":
                 # Create hangout groups for the month
@@ -175,7 +181,6 @@ def create_hangout(*, group_size=HANGOUT_GROUP_LIMIT):
     return hangout
 
 
-@render_json(BrownbagSerializer)
 def create_brownbag(date):
     """
     Create a brownbag, maintaining a unique date for it.
@@ -185,9 +190,9 @@ def create_brownbag(date):
     rand = Randomizer(list(users_queryset))
     try:
         next_presenter_id = rand.get_random()
-    except IndexError:
+    except IndexError as e:
         # Cannot choose from an empty sequence since list is empty.
-        raise "All users have been assigned a brownbag"
+        raise
     else:
         user = User.objects.get(pk=next_presenter_id)
         brownbag = Brownbag.objects.create(
