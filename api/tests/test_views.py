@@ -8,6 +8,8 @@ import datetime
 from api.models import Hangout
 from api.views import last_friday
 import os
+from api.serializers import UserSerializer
+
 
 AUTH_TOKEN = 'JWT ' + os.getenv('JWT_TOKEN')
 
@@ -56,7 +58,7 @@ class InitTestCase(TestCase):
             'type': 'hangout', 'limit': 1,
         }
         self.brownbag_request = {
-            "type": "brownbag", "limit": 1,
+            "type": "brownbag",
         }
         self.secretsanta_request = {
             "type": "secretsanta", "limit": 2,
@@ -69,7 +71,7 @@ class InitTestCase(TestCase):
         self.brownbag_data = {
             "date": str(datetime.datetime.now().date()),
             "status": "next_in_line",
-            "user": self.test_user0.id
+            "user": UserSerializer(self.test_user0).data
         }
 
         self.secretsanta_data = {
@@ -101,20 +103,16 @@ class ShuffleViewTestCase(InitTestCase):
 class BrownbagTestCase(InitTestCase):
     """Test suite for the brown bag related views."""
 
-    def test_api_can_create_next_brownbag_presenter(self):
+    def test_api_cannot_directly_create_next_brownbag_presenter(self):
         """Tests that the API can get the next brown bag presenter."""
         res = self.client.post(
             '/api/brownbags/', self.brownbag_data, format="json")
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.content)
-
-    def test_api_can_get_list_of_those_not_presented(self):
-        """Tests that the API can list users who have never done a brownbag."""
-        pass
+        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_api_can_update_presenter_status(self):
         """Tests that the API can update the status of a brownbag."""
         res = self.client.post(
-            '/api/brownbags/', self.brownbag_data, format="json")
+            '/api/shuffle/', self.brownbag_request, format="json")
         # change the status from next_in_line to done
         new_data = {
             "status": "done",
@@ -124,13 +122,16 @@ class BrownbagTestCase(InitTestCase):
         res = self.client.put(
             '/api/brownbags/{}/'.format(
                 res.data['id']), new_data, format="json")
+        print (res)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-    def test_api_can_get_next_brownbag_presenter(self):
+
+    def test_api_can_get_a_brownbag(self):
         """Test that the API can retrieve the next presenter"""
         req = self.client.post(
-            '/api/brownbags/', self.brownbag_data, format="json")
-        res = self.client.get('/api/brownbags/next/', format="json")
+            '/api/shuffle/', self.brownbag_request, format="json")
+        res = self.client.get(
+            '/api/brownbags/{}/'.format(req.data['id']), format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(self.brownbag_data['status'], res.data['status'])
 
@@ -154,7 +155,6 @@ class HangoutTestCase(InitTestCase):
         """Test that the API can retrieve a single hangout."""
         req = self.client.post(
             '/api/shuffle/', self.hangout_request, format="json")
-        print(req.data)
         res = self.client.get(
             '/api/hangouts/{}/'.format(req.data['id']), format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
