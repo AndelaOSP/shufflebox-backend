@@ -45,7 +45,6 @@ class ShuffleView(APIView):
 
             if request_type == "brownbag":
                 try:
-                    # import pdb; pdb.set_trace()
                     brownbag_data = create_brownbag(datetime.date.today())
                 except IntegrityError:
                     # There exists a brownbag this Friday, create for next one
@@ -188,7 +187,7 @@ def create_brownbag(date):
         next_presenter_id = rand.get_random()
     except IndexError:
         # Cannot choose from an empty sequence since list is empty.
-        return "All users have been assigned a brownbag"
+        raise "All users have been assigned a brownbag"
     else:
         user = User.objects.get(pk=next_presenter_id)
         brownbag = Brownbag.objects.create(
@@ -211,7 +210,7 @@ class HangoutDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class BrownbagView(generics.ListAPIView):
-    """A view for creating new Brownbags and listing them."""
+    """A view for listing brownbags."""
     queryset = Brownbag.objects.all()
     serializer_class = BrownbagSerializer
 
@@ -224,7 +223,7 @@ class BrownbagDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 class BrownbagUserListView(generics.ListAPIView):
     """
-    A view for getting a list of users have not done brownbag
+    A view for getting a list of users who have not done brownbag
     """
     serializer_class = UserSerializer
 
