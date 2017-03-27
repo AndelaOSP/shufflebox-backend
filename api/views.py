@@ -40,31 +40,30 @@ class ShuffleView(APIView):
         Return a query set according to the post message status.
         """
         try:
-            request_type = request.data['type']
-            size = request.data['limit']
+            request_type = request.data.get('type')
+            size = request.data.get('limit', None)
 
             if request_type == "brownbag":
-                # Get all users IDs elligible for brownbag
-                users_queryset = User.objects.filter(
-                    brownbag__isnull=True).values_list('id', flat=True)
-                users = list(users_queryset)
-                rand = Randomizer(users)
-                next_brownbag_user = rand.get_random()
-                today = datetime.date.today()
-                weekday = today.weekday()
-                next_friday = today + datetime.timedelta((4 - weekday) % 7)
-                data = {
-                    "date": str(next_friday),
-                    "status": "next_in_line",
-                    "user": next_brownbag_user
-                }
-                serializer = BrownbagSerializer(data=data)
-                if serializer.is_valid():
-                    serializer.save()
+                try:
+                    # import pdb; pdb.set_trace()
+                    brownbag_data = create_brownbag(datetime.date.today())
+                except IntegrityError:
+                    # There exists a brownbag this Friday, create for next one
+                    latest_brownbag = Brownbag.objects.latest('date')
+                    # Use latest friday as seed date to create next brownbag
+                    try:
+                        new_brownbag = create_brownbag(latest_brownbag.date)
+                    except Exception as e:
+                        return Response(
+                            e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                     return Response(
-                        serializer.data, status=status.HTTP_201_CREATED)
-                return Response(
-                    serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        new_brownbag, status=status.HTTP_201_CREATED)
+                except Exception as e:
+                    return Response(
+                        {'error': e}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response(
+                        brownbag_data, status=status.HTTP_201_CREATED)
 
             elif request_type == "hangout":
                 # Create hangout groups for the month
@@ -135,6 +134,14 @@ def last_friday(date):
         weekday=FR(-1))
 
 
+def next_friday(today):
+    """Utility method to return the next friday relative to the current day."""
+    # gets the next friday even when we are on Friday
+    friday = today + datetime.timedelta(
+        ((calendar.FRIDAY - 1) - today.weekday()) % 7 + 1)
+    return friday
+
+
 def render_json(serializer_class):
     """
     This decorator intercepts a model instance and renders it in json format.
@@ -155,6 +162,7 @@ def create_hangout(*, group_size=HANGOUT_GROUP_LIMIT):
     """
     Create a hangout group dated last friday of the month, given a group size.
     """
+    # Get all users IDs elligible for brownbag
     users = User.objects.all().values_list('id', flat=True)
     rand = Randomizer(list(users))
     random_groups = rand.create_groups(group_size)
@@ -166,6 +174,28 @@ def create_hangout(*, group_size=HANGOUT_GROUP_LIMIT):
             if member:
                 group_object.members.add(member)
     return hangout
+
+
+@render_json(BrownbagSerializer)
+def create_brownbag(date):
+    """
+    Create a brownbag, maintaining a unique date for it.
+    """
+    users_queryset = User.objects.filter(
+        brownbag__isnull=True).values_list('id', flat=True)
+    rand = Randomizer(list(users_queryset))
+    try:
+        next_presenter_id = rand.get_random()
+    except IndexError:
+        # Cannot choose from an empty sequence since list is empty.
+        return "All users have been assigned a brownbag"
+    else:
+        user = User.objects.get(pk=next_presenter_id)
+        brownbag = Brownbag.objects.create(
+            date=next_friday(date),
+            status=Brownbag.NEXT_IN_LINE,
+            user=user)
+        return brownbag
 
 
 class HangoutView(generics.ListAPIView):
@@ -180,7 +210,7 @@ class HangoutDetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = HangoutSerializer
 
 
-class BrownbagView(generics.ListCreateAPIView):
+class BrownbagView(generics.ListAPIView):
     """A view for creating new Brownbags and listing them."""
     queryset = Brownbag.objects.all()
     serializer_class = BrownbagSerializer
