@@ -122,7 +122,6 @@ class BrownbagTestCase(InitTestCase):
         res = self.client.put(
             '/api/brownbags/{}/'.format(
                 res.data['id']), new_data, format="json")
-        print (res)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
