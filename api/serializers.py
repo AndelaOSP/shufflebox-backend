@@ -51,7 +51,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 class BrownbagSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the Brownbag model."""
-    # user = UserSerializer()
+
+    user = UserSerializer(read_only=True)
+
     class Meta:
 
         model = Brownbag
