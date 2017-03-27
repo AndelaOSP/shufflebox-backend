@@ -18,7 +18,7 @@ class Brownbag(models.Model):
         (NOT_DONE, "Not Done")
     )
 
-    date = models.DateField(blank=True)
+    date = models.DateField(unique=True)
     status = models.CharField(
         max_length=12, choices=brownbag_choices, default=NOT_DONE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
