@@ -18,6 +18,7 @@ import json
 import functools
 
 HANGOUT_GROUP_LIMIT = 10
+SECRET_SANTA_LIMIT = 2
 
 
 class UserView(generics.ListCreateAPIView):
@@ -92,7 +93,7 @@ class ShuffleView(APIView):
                     'id', flat=True)
                 users = list(users_queryset)
                 rand = Randomizer(users)
-                all_pairs = rand.create_groups(2)
+                all_pairs = rand.create_groups(SECRET_SANTA_LIMIT)
                 data = []
                 for pair in all_pairs:
                     # write each to the secretsanta model (msg queue perhaps?)
