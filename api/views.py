@@ -237,7 +237,7 @@ class BrownbagUserListView(generics.ListAPIView):
         """
         Return a list of users who haven't done brownbag yet.
         """
-        return User.objects.filter(profile__brownbag="not_done")
+        return User.objects.filter(brownbag__isnull=True)
 
 
 class BrownbagNextInLineView(generics.ListAPIView):
