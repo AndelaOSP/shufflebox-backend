@@ -53,14 +53,20 @@ A Django-powered API for handling shufflebox consumption client requests
        ```
        > CREATE DATABASE core;
        ```
+
     Then, make your Migrations
        ```
        $ python3 manage.py makemigrations
        ```
 
-    And finally, migrate your migrations to persist on the DB
+    Migrate your migrations to persist on the DB
        ```
        $ python3 manage.py migrate
+       ```
+       
+    Finally, add seed data to your newly created database
+      ```
+       $ python3 manage.py loaddata initial_data.json
        ```
 
 * #### Running It
