@@ -1,0 +1,570 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "user",
+    "first_name": "",
+    "last_name": "",
+    "email": "user@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:09:09.320Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "!15HLaMaauf6w8DjrggP8hhMdeMLHcNHOuKL8AiMC",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Oin",
+    "first_name": "",
+    "last_name": "",
+    "email": "oin@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:11:17.232Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "!XB6IopIOgMkcTjRYTcD5cRyc1EPWbNDW43SOeakX",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Gloin",
+    "first_name": "",
+    "last_name": "",
+    "email": "gloin@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:18:12.753Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 4,
+  "fields": {
+    "password": "!npgYQutzPv3B7QrqE7sZr24yNE1am6cLj3L1dffs",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Kili",
+    "first_name": "",
+    "last_name": "",
+    "email": "kili@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:18:50.300Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 5,
+  "fields": {
+    "password": "!eqjXePgUo5SAOrvAMkjDxhYkrTlwQkdk97xPjo29",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Fili",
+    "first_name": "",
+    "last_name": "",
+    "email": "fili@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:19:15.065Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 6,
+  "fields": {
+    "password": "!Qk5EAoDlTU0COl9qDY3lD509jPuEb4WXmzyeFkfA",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Dori",
+    "first_name": "",
+    "last_name": "",
+    "email": "dori@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:19:55.409Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 7,
+  "fields": {
+    "password": "!7uzmE7YQ828mQbRKiuHA4xcrvYpLJeFERV40gAC8",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Nori",
+    "first_name": "",
+    "last_name": "",
+    "email": "nori@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:20:11.442Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 8,
+  "fields": {
+    "password": "!KEPCXAumVnuGkAsho7woWVsnB96Z3LQWiHe5xMdK",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Ori",
+    "first_name": "",
+    "last_name": "",
+    "email": "ori@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:20:25.888Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 9,
+  "fields": {
+    "password": "!jbMOaJw1Ubp7CJf5F57cpIJBft0LYvdhid3rVKjw",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Bifur",
+    "first_name": "",
+    "last_name": "",
+    "email": "bifur@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:21:03.917Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 10,
+  "fields": {
+    "password": "!0HdKey6qARFRWUgxdL31NMuNskr0Z2g5zchs22vv",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Bofur",
+    "first_name": "",
+    "last_name": "",
+    "email": "bofur@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:21:27.126Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 11,
+  "fields": {
+    "password": "!R2xM40mZPGjThgblvthizXMgzTYStSqlczFHnws7",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Bombur",
+    "first_name": "",
+    "last_name": "",
+    "email": "bombur@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:21:57.576Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 12,
+  "fields": {
+    "password": "!K0peUTI1sIaOeQ0Cbtr1jBCCuClEGVfYw0O2jZZP",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Thorin",
+    "first_name": "",
+    "last_name": "",
+    "email": "thorin@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:22:32.513Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 13,
+  "fields": {
+    "password": "!b1Z0SbDfQqbl4MPR5xVLDmkagWQYsHmu94DNYHpx",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Dwalin",
+    "first_name": "",
+    "last_name": "",
+    "email": "dwalin@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:28:27.451Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 14,
+  "fields": {
+    "password": "!3fNWBb0PQphJjAvJwo4WZpXRyMNWNdPfDDsHkfVi",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Balin",
+    "first_name": "",
+    "last_name": "",
+    "email": "balin@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:28:57.539Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 15,
+  "fields": {
+    "password": "!wdeqwj8DomcoSgxkDMTg2SC1R7ZRetbHUjPCfQVd",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Gandalf",
+    "first_name": "",
+    "last_name": "",
+    "email": "gandalf@andela.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-09-05T08:31:37.119Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "api.brownbag",
+  "pk": 1,
+  "fields": {
+    "date": "2017-09-08",
+    "status": "done",
+    "user": 2
+  }
+},
+{
+  "model": "api.brownbag",
+  "pk": 3,
+  "fields": {
+    "date": "2017-09-15",
+    "status": "next_in_line",
+    "user": 8
+  }
+},
+{
+  "model": "api.brownbag",
+  "pk": 5,
+  "fields": {
+    "date": "2017-09-22",
+    "status": "not_done",
+    "user": 6
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "avatar": "",
+    "birth_date": null,
+    "bio": ""
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "avatar": "",
+    "birth_date": "2000-01-01",
+    "bio": "A good dwarf"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "avatar": "",
+    "birth_date": "2000-02-02",
+    "bio": "Another dwarf"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 4,
+  "fields": {
+    "user": 4,
+    "avatar": "",
+    "birth_date": "1998-12-02",
+    "bio": "Another dwarf"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 5,
+  "fields": {
+    "user": 5,
+    "avatar": "",
+    "birth_date": "1998-12-12",
+    "bio": "Dwarf Kili"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 6,
+  "fields": {
+    "user": 6,
+    "avatar": "",
+    "birth_date": "1996-11-10",
+    "bio": "Dwarf Dori"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 7,
+  "fields": {
+    "user": 7,
+    "avatar": "",
+    "birth_date": "1996-11-11",
+    "bio": "Dwarf Nori"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 8,
+  "fields": {
+    "user": 8,
+    "avatar": "",
+    "birth_date": "1996-11-11",
+    "bio": "Dwarf Ori"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 9,
+  "fields": {
+    "user": 9,
+    "avatar": "",
+    "birth_date": "1997-01-15",
+    "bio": "Dwarf Bifur"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 10,
+  "fields": {
+    "user": 10,
+    "avatar": "",
+    "birth_date": "1997-01-13",
+    "bio": "Dwarf Bofur"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 11,
+  "fields": {
+    "user": 11,
+    "avatar": "",
+    "birth_date": "1997-08-23",
+    "bio": "Dwarf Bombur"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 12,
+  "fields": {
+    "user": 12,
+    "avatar": "",
+    "birth_date": "1990-04-02",
+    "bio": "Dwarf King"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 13,
+  "fields": {
+    "user": 13,
+    "avatar": "",
+    "birth_date": "1990-04-02",
+    "bio": "Dwarf Dwalin"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 14,
+  "fields": {
+    "user": 14,
+    "avatar": "",
+    "birth_date": "2001-05-02",
+    "bio": "Dwarf Balin"
+  }
+},
+{
+  "model": "api.profile",
+  "pk": 15,
+  "fields": {
+    "user": 15,
+    "avatar": "",
+    "birth_date": "1496-03-29",
+    "bio": "The grey"
+  }
+},
+{
+  "model": "api.hangout",
+  "pk": 1,
+  "fields": {
+    "date": "2017-09-29"
+  }
+},
+{
+  "model": "api.group",
+  "pk": 1,
+  "fields": {
+    "hangout": 1,
+    "members": [
+      13,
+      1,
+      5,
+      6,
+      12
+    ]
+  }
+},
+{
+  "model": "api.group",
+  "pk": 2,
+  "fields": {
+    "hangout": 1,
+    "members": [
+      2,
+      10,
+      15,
+      7,
+      14
+    ]
+  }
+},
+{
+  "model": "api.group",
+  "pk": 3,
+  "fields": {
+    "hangout": 1,
+    "members": [
+      4,
+      11,
+      9,
+      3,
+      8
+    ]
+  }
+},
+{
+  "model": "api.secretsanta",
+  "pk": 1,
+  "fields": {
+    "date": "2017-09-05",
+    "santa": 7,
+    "giftee": 11
+  }
+},
+{
+  "model": "api.secretsanta",
+  "pk": 2,
+  "fields": {
+    "date": "2017-09-05",
+    "santa": 13,
+    "giftee": 6
+  }
+},
+{
+  "model": "api.secretsanta",
+  "pk": 3,
+  "fields": {
+    "date": "2017-09-05",
+    "santa": 2,
+    "giftee": 9
+  }
+},
+{
+  "model": "api.secretsanta",
+  "pk": 4,
+  "fields": {
+    "date": "2017-09-05",
+    "santa": 14,
+    "giftee": 3
+  }
+},
+{
+  "model": "api.secretsanta",
+  "pk": 5,
+  "fields": {
+    "date": "2017-09-05",
+    "santa": 8,
+    "giftee": 5
+  }
+},
+{
+  "model": "api.secretsanta",
+  "pk": 6,
+  "fields": {
+    "date": "2017-09-05",
+    "santa": 1,
+    "giftee": 12
+  }
+},
+{
+  "model": "api.secretsanta",
+  "pk": 7,
+  "fields": {
+    "date": "2017-09-05",
+    "santa": 15,
+    "giftee": 4
+  }
+},
+{
+  "model": "api.secretsanta",
+  "pk": 8,
+  "fields": {
+    "date": "2017-09-05",
+    "santa": 10,
+    "giftee": 1
+  }
+}
+]
