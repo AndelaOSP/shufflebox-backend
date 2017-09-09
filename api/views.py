@@ -132,6 +132,7 @@ class ShuffleView(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 def serialize_brownbag(brownbag_data):
+    """Serialize the data returned depending on type of object passed."""
     data = {}
     if type(brownbag_data) == list:
         serializer = []
@@ -166,9 +167,9 @@ def next_friday(today):
     return friday
 
 def check_date(date):
+    """Check if the date of the next friday is not already in the database"""
     try:
         if next_friday(date) <= Brownbag.objects.latest('date').date:
-            times = 2
             raise IntegrityError
         else:
             return True
@@ -176,6 +177,7 @@ def check_date(date):
         return True
 
 def check_people(people):
+    """Check that the number of multiple presenters is not larger than available people"""
     users = User.objects.filter(
         brownbag__isnull=True).values_list('id', flat=True)
     if people > len(users):
