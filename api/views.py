@@ -46,15 +46,19 @@ class ShuffleView(APIView):
 
             if request_type == "brownbag":
                 try:
-                    brownbag_data = create_brownbag(datetime.date.today())
+                    valid_number, users = check_people(int(size))
+                    if not valid_number:
+                        return Response(
+                            {'message': "The number of people exists available users. Available users is {}".format(users)},
+                            status=status.HTTP_400_BAD_REQUEST)
+                    check_date(datetime.date.today())
+                    brownbag_data = create_brownbag(datetime.date.today(), size)
                 except IntegrityError:
                     # There exists a brownbag this Friday, create for next one
                     # Use latest friday as seed date to create next brownbag
                     latest_brownbag = Brownbag.objects.latest('date')
-                    brownbag_data = create_brownbag(latest_brownbag.date)
-                    serializer = BrownbagSerializer(brownbag_data)
-                    rendered = JSONRenderer().render(serializer.data)
-                    data = json.loads(rendered.decode())
+                    brownbag_data = create_brownbag(latest_brownbag.date, size)
+                    data = serialize_brownbag(brownbag_data)
                     return Response(
                         data, status=status.HTTP_201_CREATED)
                 except IndexError as e:
@@ -65,9 +69,7 @@ class ShuffleView(APIView):
                     return Response(
                         {'error': e.args}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    serializer = BrownbagSerializer(brownbag_data)
-                    rendered = JSONRenderer().render(serializer.data)
-                    data = json.loads(rendered.decode())
+                    data = serialize_brownbag(brownbag_data)
                     return Response(
                         data, status=status.HTTP_201_CREATED)
 
@@ -129,6 +131,22 @@ class ShuffleView(APIView):
                 "Bad Request: Missing Either 'type' or 'limit' ",
                 status=status.HTTP_400_BAD_REQUEST)
 
+def serialize_brownbag(brownbag_data):
+    data = {}
+    if type(brownbag_data) == list:
+        serializer = []
+        count = 1
+        for brownbag in brownbag_data:
+            serializer = BrownbagSerializer(brownbag)
+            rendered = JSONRenderer().render(serializer.data)
+            data.update({count: json.loads(rendered.decode())})
+            count += 1
+    else:
+        serializer = BrownbagSerializer(brownbag_data)
+        rendered = JSONRenderer().render(serializer.data)
+        data = json.loads(rendered.decode())
+    return data
+
 
 def last_friday(date):
     """Utility method to find last friday of the month using a given date."""
@@ -147,6 +165,22 @@ def next_friday(today):
         ((calendar.FRIDAY - 1) - today.weekday()) % 7 + 1)
     return friday
 
+def check_date(date):
+    try:
+        if next_friday(date) <= Brownbag.objects.latest('date').date:
+            times = 2
+            raise IntegrityError
+        else:
+            return True
+    except Brownbag.DoesNotExist:
+        return True
+
+def check_people(people):
+    users = User.objects.filter(
+        brownbag__isnull=True).values_list('id', flat=True)
+    if people > len(users):
+        return False, len(users)
+    return True, len(users)
 
 def render_json(serializer_class):
     """
@@ -182,25 +216,33 @@ def create_hangout(*, group_size=HANGOUT_GROUP_LIMIT):
     return hangout
 
 
-def create_brownbag(date):
+def create_brownbag(date, people):
     """
     Create a brownbag, maintaining a unique date for it.
     """
+    people = 1 if people is None else int(people)
     users_queryset = User.objects.filter(
         brownbag__isnull=True).values_list('id', flat=True)
-    rand = Randomizer(list(users_queryset))
-    try:
-        next_presenter_id = rand.get_random()
-    except IndexError as e:
-        # Cannot choose from an empty sequence since list is empty.
-        raise
+
+    if people > 1:
+        brownbags = []
+        for person in range(people):
+            brownbags.append(create_brownbag(date, None))
+        return brownbags
     else:
-        user = User.objects.get(pk=next_presenter_id)
-        brownbag = Brownbag.objects.create(
-            date=next_friday(date),
-            status=Brownbag.NEXT_IN_LINE,
-            user=user)
-        return brownbag
+        rand = Randomizer(list(users_queryset))
+        try:
+            next_presenter_id = rand.get_random()
+        except IndexError as e:
+            # Cannot choose from an empty sequence since list is empty.
+            raise
+        else:
+            user = User.objects.get(pk=next_presenter_id)
+            brownbag = Brownbag.objects.create(
+                date=next_friday(date),
+                status=Brownbag.NEXT_IN_LINE,
+                user=user)
+            return brownbag
 
 
 class HangoutView(generics.ListAPIView):
