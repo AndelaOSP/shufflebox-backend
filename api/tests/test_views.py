@@ -58,7 +58,10 @@ class InitTestCase(TestCase):
             'type': 'hangout', 'limit': 1,
         }
         self.brownbag_request = {
-            "type": "brownbag",
+            "type": "brownbag", 'limit': 1,
+        }
+        self.brownbag_multiple_request = {
+            "type": "brownbag", 'limit': 3,
         }
         self.secretsanta_request = {
             "type": "secretsanta", "limit": 2,
@@ -133,6 +136,13 @@ class BrownbagTestCase(InitTestCase):
             '/api/brownbags/{}/'.format(req.data['id']), format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(self.brownbag_data['status'], res.data['status'])
+
+    def test_api_can_create_multiple_presenters(self):
+        """Test that the API can allow for multiple presenters"""
+        req = self.client.post(
+            '/api/shuffle/', self.brownbag_multiple_request, format="json")
+        self.assertEqual(req.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.brownbag_multiple_request['limit'], len(req.data))
 
 
 class HangoutTestCase(InitTestCase):
