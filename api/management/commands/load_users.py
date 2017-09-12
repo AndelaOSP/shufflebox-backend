@@ -15,7 +15,8 @@ class Command(BaseCommand):
         }
 
         response = requests.get(
-            "https://api-staging.andela.com/api/v1/users?statuses=active&limit=1000", headers=headers)
+            "https://api-staging.andela.com/api/v1/users?statuses=active&limit=1000",
+            headers=headers)
         if response.status_code == 200:
             # Loop though the users and add them to the db
             persons = response.json()["values"]
@@ -23,18 +24,19 @@ class Command(BaseCommand):
             for person in persons:
                 try:
                     user = User.objects.create_user(
-                        username="{} {}".format(
-                            person["first_name"], person["last_name"]),
+                        username=person["email"],
+                        first_name=person["first_name"],
+                        last_name=person["last_name"],
                         email=person["email"]
                     )
                     user.profile.avatar = person["picture"]
                     user.profile.bio = person["bio"]
                     user.save()
                     count += 1
-                except:
-                    # User exists
+                except Exception:
+                    # User already exists
                     pass
-            self.stdout.write("Added {} users to db".format(count))
+            self.stdout.write("Added {} users to shufflebox".format(count))
         else:
             self.stdout.write("Error: {}".format(response.status_code))
             return None
