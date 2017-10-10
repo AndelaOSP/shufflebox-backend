@@ -15,7 +15,8 @@ class Command(BaseCommand):
         }
 
         response = requests.get(
-            "https://api-staging.andela.com/api/v1/users?statuses=active&limit=1000",
+            "https://api-staging.andela.com/api/v1/users? \
+            statuses=active&location_ids=-JqPKs52HaqLXCVQlwZL&limit=1000",
             headers=headers)
         if response.status_code == 200:
             # Loop though the users and add them to the db
