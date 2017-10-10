@@ -288,15 +288,8 @@ class BrownbagNextInLineView(generics.ListAPIView):
     """This view  queries for the next in line brownbag presenter."""
     serializer_class = BrownbagSerializer
 
-    def get(self, *args, **kwargs):
-        """
-        Return the brownbag entry as determined by status portion of the URL.
-        """
-        result = Brownbag.objects.filter(
-            status="next_in_line").latest('status')
-        serializer = BrownbagSerializer(result)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        return Brownbag.objects.filter(status="next_in_line")
 
 
 class SecretSantaView(generics.ListCreateAPIView):
