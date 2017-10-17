@@ -76,7 +76,8 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
     '127.0.0.1:3000',
-    'https://shufflebox-frontend.herokuapp.com'
+    'shufflebox-frontend.herokuapp.com',
+    'shufflebox-staging.herokuapp.com'
 )
 
 CORS_ALLOW_CREDENTIALS = True
