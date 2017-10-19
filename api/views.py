@@ -93,7 +93,8 @@ class ShuffleView(APIView):
                 # Create all secretsanta pairs for that year
                 users_queryset = User.objects.all().values_list(
                     'id', flat=True)
-                users = shuffle(list(users_queryset))
+                users = list(users_queryset)
+                shuffle(users)
                 remainder = users[-1] and users.pop() if len(users) % 2 > 0 else []
 
                 secret_santas = []
