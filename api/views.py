@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta, FR
 
 from rest_framework.renderers import JSONRenderer
 from django.db import IntegrityError
+from random import shuffle
 import datetime
 import calendar
 import json
@@ -90,32 +91,45 @@ class ShuffleView(APIView):
 
             elif request_type == "secretsanta":
                 # Create all secretsanta pairs for that year
-                # dummy data simulated from the core module
                 users_queryset = User.objects.all().values_list(
                     'id', flat=True)
                 users = list(users_queryset)
-                rand = Randomizer(users)
-                all_pairs = rand.create_groups(SECRET_SANTA_LIMIT)
-                data = []
-                for pair in all_pairs:
-                    # write each to the secretsanta model (msg queue perhaps?)
-                    if pair[1] is not None:
-                        secretsanta = {
-                            "date": str(datetime.datetime.now().date()),
-                            "santa": pair[0],
-                            "giftee": pair[1]
-                        }
-                    else:
-                        # In the event of a pending/ unpaired user
-                        # Default to admin user as the giftee
-                        secretsanta = {
-                            "date": str(datetime.datetime.now().date()),
-                            "santa": pair[0],
-                            "giftee": 1
-                        }
-                    data.append(secretsanta)
+                shuffle(users)
+                remainder = users[-1] and users.pop() if len(users) % 2 > 0 else []
 
-                serializer = SecretSantaSerializer(data=data, many=True)
+                secret_santas = []
+
+                santas = users[:len(users) // 2]
+                giftees = users[len(users) // 2:]
+
+                # Santas to Giftees
+                shuffle(giftees)
+                for i in range(len(santas)):
+                    secretsanta_pair = {
+                        "date": str(datetime.datetime.now().date()),
+                        "santa": santas[i],
+                        "giftee": giftees[i]
+                    }
+                    secret_santas.append(secretsanta_pair)
+
+                # Giftees become Santas
+                shuffle(santas)
+                for i in range(len(santas)):
+                    secretsanta_pair = {
+                        "date": str(datetime.datetime.now().date()),
+                        "santa": giftees[i],
+                        "giftee": santas[i]
+                    }
+                    secret_santas.append(secretsanta_pair)
+
+                # Make P&C the Santa for those not picked
+                secret_santas.append({
+                    "date": str(datetime.datetime.now().date()),
+                    "santa": "",
+                    "giftee": "P&C"
+                }) if len(remainder) > 0 else None
+
+                serializer = SecretSantaSerializer(data=secret_santas, many=True)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(
@@ -130,6 +144,7 @@ class ShuffleView(APIView):
             return Response(
                 "Bad Request: Missing Either 'type' or 'limit' ",
                 status=status.HTTP_400_BAD_REQUEST)
+
 
 def serialize_brownbag(brownbag_data):
     """Serialize the data returned depending on type of object passed."""
