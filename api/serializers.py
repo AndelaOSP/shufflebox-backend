@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Profile, Brownbag, SecretSanta, Group, Hangout
@@ -85,7 +86,9 @@ class HangoutSerializer(serializers.ModelSerializer):
 class SecretSantaSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the SecretSanta model."""
 
-    class Meta:
+    santa = UserSerializer()
+    giftee = UserSerializer()
 
+    class Meta:
         model = SecretSanta
         fields = ('id', 'date', 'santa', 'giftee')
