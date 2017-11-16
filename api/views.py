@@ -50,7 +50,7 @@ class ShuffleView(APIView):
                     valid_number, users = check_people(int(size))
                     if not valid_number:
                         return Response(
-                            {'message': "The number of people exists available users. Available users is {}".format(users)},
+                            {'message': "The number of people exceeds available users. Available users is {}".format(users)},
                             status=status.HTTP_400_BAD_REQUEST)
                     check_date(datetime.date.today())
                     brownbag_data = create_brownbag(datetime.date.today(), size)
@@ -91,8 +91,7 @@ class ShuffleView(APIView):
 
             elif request_type == "secretsanta":
                 # Create all secretsanta pairs for that year
-                users_queryset = User.objects.all().values_list(
-                    'id', flat=True)
+                users_queryset = User.objects.all()
                 users = list(users_queryset)
                 shuffle(users)
                 remainder = users[-1] and users.pop() if len(users) % 2 > 0 else []
@@ -102,40 +101,41 @@ class ShuffleView(APIView):
                 santas = users[:len(users) // 2]
                 giftees = users[len(users) // 2:]
 
+                # Remove all existing secret santa pairs
+                SecretSanta.objects.all().delete()
+
                 # Santas to Giftees
                 shuffle(giftees)
                 for i in range(len(santas)):
-                    secretsanta_pair = {
-                        "date": str(datetime.datetime.now().date()),
-                        "santa": santas[i],
-                        "giftee": giftees[i]
-                    }
+                    secretsanta_pair = SecretSanta.objects.create(
+                        date=str(datetime.datetime.now().date()),
+                        santa=santas[i],
+                        giftee=giftees[i]
+                    )
                     secret_santas.append(secretsanta_pair)
 
                 # Giftees become Santas
                 shuffle(santas)
                 for i in range(len(santas)):
-                    secretsanta_pair = {
-                        "date": str(datetime.datetime.now().date()),
-                        "santa": giftees[i],
-                        "giftee": santas[i]
-                    }
+                    secretsanta_pair = SecretSanta.objects.create(
+                        date=str(datetime.datetime.now().date()),
+                        santa=giftees[i],
+                        giftee=santas[i]
+                    )
                     secret_santas.append(secretsanta_pair)
 
                 # Make P&C the Santa for those not picked
-                secret_santas.append({
-                    "date": str(datetime.datetime.now().date()),
-                    "santa": "",
-                    "giftee": "P&C"
-                }) if len(remainder) > 0 else None
+                secret_santas.append(
+                    SecretSanta.objects.create(
+                        date=str(datetime.datetime.now().date()),
+                        santa="",
+                        giftee="P&C"
+                    )
+                ) if len(remainder) > 0 else None
 
-                serializer = SecretSantaSerializer(data=secret_santas, many=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(
-                        serializer.data, status=status.HTTP_201_CREATED)
+                serialized_data = serialize_secretsanta(secret_santas)
                 return Response(
-                    serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    serialized_data, status=status.HTTP_201_CREATED)
             else:
                 return Response(
                     "Bad Request With Wrong Unexpected Value of 'type' key",
@@ -146,6 +146,17 @@ class ShuffleView(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
 
+def serialize_secretsanta(secretsanta_data):
+    """Serialize secret santa data"""
+    data = {}
+    count = 1
+    for secretsanta in secretsanta_data:
+        serializer = SecretSantaSerializer(secretsanta)
+        data.update({count: json_renderer(serializer.data)})
+        count += 1
+    return data
+
+
 def serialize_brownbag(brownbag_data):
     """Serialize the data returned depending on type of object passed."""
     data = {}
@@ -154,14 +165,18 @@ def serialize_brownbag(brownbag_data):
         count = 1
         for brownbag in brownbag_data:
             serializer = BrownbagSerializer(brownbag)
-            rendered = JSONRenderer().render(serializer.data)
-            data.update({count: json.loads(rendered.decode())})
+            data.update({count: json_renderer(serializer.data)})
             count += 1
     else:
         serializer = BrownbagSerializer(brownbag_data)
-        rendered = JSONRenderer().render(serializer.data)
-        data = json.loads(rendered.decode())
+        data = json_renderer(serializer.data)
     return data
+
+
+def json_renderer(data):
+    """Render serialized data in json format"""
+    rendered_data = JSONRenderer().render(data).decode()
+    return json.loads(rendered_data)
 
 
 def last_friday(date):
