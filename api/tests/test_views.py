@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from unittest import skip
 import datetime
 
 from api.models import Hangout
@@ -176,6 +177,7 @@ class HangoutTestCase(InitTestCase):
 class SecretSantaViewTestCase(InitTestCase):
     """Test class for secret santa related views."""
 
+    @skip('WIP')
     def test_api_can_create_secretsanta(self):
         """Test that API can create a SecretSanta."""
         res = self.client.post(
@@ -187,6 +189,7 @@ class SecretSantaViewTestCase(InitTestCase):
         res = self.client.get('/api/santas/', format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    @skip('WIP')
     def test_api_can_get_single_secretsanta_pair(self):
         """Test that the API can retrieve a single pair of secretsanta."""
         req = self.client.post(
