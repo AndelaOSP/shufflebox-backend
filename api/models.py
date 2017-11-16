@@ -72,7 +72,8 @@ class SecretSanta(models.Model):
     date = models.DateField()
     santa = models.ForeignKey(
         User, related_name="santa", on_delete=models.CASCADE)
-    giftee = models.ForeignKey(User, on_delete=models.CASCADE)
+    giftee = models.ForeignKey(
+        User, related_name="giftee", on_delete=models.CASCADE)
 
     def __str__(self):
         """Return a string representation of the model instance."""

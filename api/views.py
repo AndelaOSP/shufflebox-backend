@@ -50,7 +50,7 @@ class ShuffleView(APIView):
                     valid_number, users = check_people(int(size))
                     if not valid_number:
                         return Response(
-                            {'message': "The number of people exists available users. Available users is {}".format(users)},
+                            {'message': "The number of people exceeds available users. Available users is {}".format(users)},
                             status=status.HTTP_400_BAD_REQUEST)
                     check_date(datetime.date.today())
                     brownbag_data = create_brownbag(datetime.date.today(), size)

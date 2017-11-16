@@ -86,8 +86,8 @@ class HangoutSerializer(serializers.ModelSerializer):
 class SecretSantaSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the SecretSanta model."""
 
-    santa = UserSerializer()
-    giftee = UserSerializer()
+    santa = UserSerializer(required=True)
+    giftee = UserSerializer(required=True)
 
     class Meta:
         model = SecretSanta
