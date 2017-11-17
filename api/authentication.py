@@ -39,7 +39,6 @@ class CustomTokenAuthentication(BaseAuthentication):
             raise exceptions.AuthenticationFailed(
                 'Invalid. The Authorization Header should look as follows:'
                 '{}'.format(token_format))
-            return None
         self.token = auth[1]
         try:
             payload = jwt.decode(self.token, verify=False)
@@ -47,7 +46,6 @@ class CustomTokenAuthentication(BaseAuthentication):
         except InvalidTokenError:
             raise exceptions.AuthenticationFailed(
                 'Invalid token. Please provide a valid token:')
-            return None
 
     def authenticate_credentials(self, payload):
         """Checks for the User object associated with the user_info payload.
