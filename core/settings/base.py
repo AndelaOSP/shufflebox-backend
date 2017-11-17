@@ -163,3 +163,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+ADMINS = [
+    ('Dng', 'denis.gathondu@andela.com'),
+    ('Austin', 'austin.roy@andela.com'),
+    ('Bonnie', 'boniface.mwenda@andela.com')
+]
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'shufflebox@andela.com'
+EMAIL_HOST_PASSWORD = 'everydayamshuffling'
+DEFAULT_FROM_EMAIL = 'SHUFFLEBOX <shufflebox@andela.com>'
