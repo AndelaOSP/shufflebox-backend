@@ -13,7 +13,6 @@ class Command(BaseCommand):
             "Authorization": os.getenv("USER_API_TOKEN"),
             "Content-Type": "Application/json"
         }
-
         response = requests.get(
             "{}?{}".format(os.getenv("USER_SERVICE_URL"),
                            os.getenv("FILTER_PARAMS")),

@@ -1,8 +1,11 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import UserView, ProfileView, ShuffleView, HangoutView, \
-    BrownbagView, SecretSantaView, HangoutDetailsView, BrownbagDetailsView, \
-    BrownbagNextInLineView, BrownbagUserListView, SecretSantaDetailsView
+from .views import (
+    UserView, ProfileView, ShuffleView, HangoutView,
+    BrownbagView, SecretSantaView, HangoutDetailsView, BrownbagDetailsView,
+    BrownbagNextInLineView, BrownbagUserListView, SecretSantaDetailsView,
+    SendMailView
+)
 
 
 urlpatterns = {
@@ -20,7 +23,8 @@ urlpatterns = {
     url(r'brownbags/not_presented/', BrownbagUserListView.as_view()),
     url(r'^santas/$', SecretSantaView.as_view(), name="santa"),
     url(r'^santas/(?P<pk>[0-9]+)/$',
-        SecretSantaDetailsView.as_view(), name="santa_details")
+        SecretSantaDetailsView.as_view(), name="santa_details"),
+    url(r'^mail/', SendMailView.as_view(), name="send_emails"),
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)

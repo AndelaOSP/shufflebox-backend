@@ -2,11 +2,13 @@ from .models import Brownbag, Hangout, SecretSanta, Profile, Group
 from .serializers import (
   UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 )
+from .utils import Mail, validate_address, notify_admin
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 from django.contrib.auth.models import User
+from django.conf import settings
 from shufflebox import Randomizer
 from dateutil.relativedelta import relativedelta, FR
 
@@ -144,6 +146,45 @@ class ShuffleView(APIView):
             return Response(
                 "Bad Request: Missing Either 'type' or 'limit' ",
                 status=status.HTTP_400_BAD_REQUEST)
+
+class SendMailView(APIView):
+    """View for sending out emails"""
+    def post(self, request):
+        try:
+            request_type = request.data.get('type')
+            if request_type == "brownbag":
+                # TODO: add logic for sending out brownbag emails
+                pass
+            elif request_type == "hangout":
+                # TODO:add logic for sending out hangout emails
+                pass
+            elif request_type == "secretsanta":
+                santas = SecretSanta.objects.all()
+                mail = Mail()
+                mail.subject = "Secret Santa"
+                with open('secretsanta.txt', 'r') as f:
+                    message = f.readlines()
+                message = ''.join(message)
+                for santa in santas:
+                    gifter = santa.santa.username
+                    giftee = santa.giftee.username
+                    if validate_address(gifter) and validate_address(giftee):
+                        mail.create_message(message.format(giftee),[gifter])
+                    else:
+                        notify_admin(
+                            "Shuffle Box Secret Santa Error",
+                            "Invalid email address {} for the santa or {} for the giftee.".format(gifter, giftee))
+                mail.mass_mail()
+                return Response(
+                    "Succesfully sent out secret santa emails", status=status.HTTP_200_OK
+                )
+            else:
+                return Response(
+                    "Bad Request With Wrong Unexpected Value of 'type' key",
+                    status=status.HTTP_400_BAD_REQUEST)
+        except KeyError:
+            return Response("Bad Request: Missing 'type'", status=status.HTTP_400_BAD_REQUEST)
+
 
 
 def serialize_secretsanta(secretsanta_data):
