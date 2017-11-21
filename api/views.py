@@ -165,10 +165,9 @@ class SendMailView(APIView):
                 )
                 mail = Mail()
                 mail.subject = "Secret Santa"
-                message = (
-                    "You have been randomly selected to be the secret santa for {}."
-                    "\rPlease remember to get them a gift and as required by Andela, it should be a gift worth KES 1000 or Above."
-                    "\r\r Thanks.\r\rSHUFFLE BOX TEAM.")
+                with open('secretsanta.txt', 'r') as f:
+                    message = f.readlines()
+                message = ''.join(message)
                 for santa in santas:
                     gifter = santa.santa.username
                     giftee = santa.giftee.username
