@@ -1,6 +1,6 @@
 from .models import Brownbag, Hangout, SecretSanta, Profile, Group
 from .serializers import (
-  UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
+    UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 )
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -50,10 +50,12 @@ class ShuffleView(APIView):
                     valid_number, users = check_people(int(size))
                     if not valid_number:
                         return Response(
-                            {'message': "The number of people exceeds available users. Available users is {}".format(users)},
+                            {'message': "The number of people exceeds available users. Available users is {}".format(
+                                users)},
                             status=status.HTTP_400_BAD_REQUEST)
                     check_date(datetime.date.today())
-                    brownbag_data = create_brownbag(datetime.date.today(), size)
+                    brownbag_data = create_brownbag(
+                        datetime.date.today(), size)
                 except IntegrityError:
                     # There exists a brownbag this Friday, create for next one
                     # Use latest friday as seed date to create next brownbag
@@ -94,7 +96,8 @@ class ShuffleView(APIView):
                 users_queryset = User.objects.all()
                 users = list(users_queryset)
                 shuffle(users)
-                remainder = users[-1] and users.pop() if len(users) % 2 > 0 else []
+                remainder = [users[-1] and users.pop() if len(users) %
+                             2 > 0 else []]
 
                 secret_santas = []
 
@@ -125,11 +128,12 @@ class ShuffleView(APIView):
                     secret_santas.append(secretsanta_pair)
 
                 # Make P&C the Santa for those not picked
+                admin = User.objects.get(username="shufflebox@andela.com")
                 secret_santas.append(
                     SecretSanta.objects.create(
                         date=str(datetime.datetime.now().date()),
-                        santa="",
-                        giftee="P&C"
+                        santa=admin,
+                        giftee=remainder[0]
                     )
                 ) if len(remainder) > 0 else None
 
@@ -196,6 +200,7 @@ def next_friday(today):
         ((calendar.FRIDAY - 1) - today.weekday()) % 7 + 1)
     return friday
 
+
 def check_date(date):
     """Check if the date of the next friday is not already in the database"""
     try:
@@ -206,6 +211,7 @@ def check_date(date):
     except Brownbag.DoesNotExist:
         return True
 
+
 def check_people(people):
     """Check that the number of multiple presenters is not larger than available people"""
     users = User.objects.filter(
@@ -213,6 +219,7 @@ def check_people(people):
     if people > len(users):
         return False, len(users)
     return True, len(users)
+
 
 def render_json(serializer_class):
     """
