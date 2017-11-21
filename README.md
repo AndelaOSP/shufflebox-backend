@@ -98,9 +98,10 @@ A Django-powered API for handling shufflebox consumption client requests
 | [GET /api/hangouts/:id](#) | Get a single hangout group using its id. |
 | [PUT /api/hangouts/:id](#) | Update a single hangout group. Request should have _date_ and _members_ in form or raw json data. |
 | [DELETE /api/hangouts/:id](#) | Delete a single hangout group. |
-| [POST /api/santa/](#) | Creat a single Secret Santa pair. |
-| [GET /api/santa/](#) | Get a list of all Secret Santa pairs. |
+| [POST /api/santas/](#) | Create a single Secret Santa pair. |
+| [GET /api/santas/](#) | Get a list of all Secret Santa pairs. |
 | [GET /api/santa/:id](#) | Get a single Secret Santa pair. |
+| [POST /api/mail/](#) | Send out shuffle box emails. Request contains **_"type"_**:("hangout" or "brownbag" or "santa") |
 
 
 ## Contributing
