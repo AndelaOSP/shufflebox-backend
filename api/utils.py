@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.mail import send_mail, send_mass_mail, mail_admins, EmailMessage
+from django.core.mail import send_mail, get_connection, mail_admins, EmailMessage
 from django.core import validators
 from smtplib import SMTPException
 from rest_framework import exceptions
@@ -31,9 +31,8 @@ class Mail(object):
     def mass_mail(self):
         try:
             if self.message_list:
-                for message in self.message_list:
-                    # send_mass_mail(self.message_list, fail_silently=False)
-                    message.send()
+                connection = get_connection()
+                connection.send_messages(self.message_list)
             else:
                 raise exceptions.ValidationError(
                     "Message list should not be empty")
@@ -43,7 +42,7 @@ class Mail(object):
     def create_message(self, message='No message', recipients=None):
         try:
             if recipients and isinstance(recipients, list):
-                mail_msg = EmailMessage((self.subject, message, settings.DEFAULT_FROM_EMAIL, recipients))
+                mail_msg = EmailMessage(self.subject, message, settings.DEFAULT_FROM_EMAIL, recipients)
                 mail_msg.content_subtype = 'HTML'
                 self.message_list.append(mail_msg)
             else:
