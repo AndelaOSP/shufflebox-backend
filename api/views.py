@@ -159,7 +159,7 @@ class SendMailView(APIView):
                 # TODO:add logic for sending out hangout emails
                 pass
             elif request_type == "secretsanta":
-                santas = SecretSanta.objects.get()
+                santas = SecretSanta.objects.all()
                 mail = Mail()
                 mail.subject = "Secret Santa"
                 with open('secretsanta.txt', 'r') as f:
