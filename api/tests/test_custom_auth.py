@@ -5,7 +5,7 @@ from rest_framework import status
 import os
 
 
-AUTH_TOKEN = config('JWT_TOKEN')
+AUTH_TOKEN = config('JWT_TOKEN', default='')
 AUTH_HEADER = 'JWT ' + AUTH_TOKEN
 
 

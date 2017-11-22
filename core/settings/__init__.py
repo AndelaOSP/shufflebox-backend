@@ -6,7 +6,7 @@ from decouple import config
 from dotenv import load_dotenv
 
 # Ensure development settings are not used in testing and production:
-if not config('CI', default=False) and not config('HEROKU', default=False):
+if not config('CI', default=None) and not config('HEROKU', default=None):
     # load and set environment variables from '.env.yml' or '.env.py' files
     # with django_envie
 
