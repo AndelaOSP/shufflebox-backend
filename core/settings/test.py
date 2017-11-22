@@ -3,10 +3,11 @@ Test specific settings.
 """
 
 from core.settings.base import *
+from decouple import config
 
 #Use the following live settings to build on Travis CI
-if os.getenv('TRAVIS_BUILD', None):
-    SECRET_KEY = os.getenv('SECRET_KEY')
+if config('TRAVIS_BUILD', default=None):
+    SECRET_KEY = config('SECRET_KEY')
     DEBUG = False
 
     DATABASES = {

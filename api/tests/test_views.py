@@ -1,3 +1,4 @@
+from decouple import config
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
@@ -12,7 +13,7 @@ import os
 from api.serializers import UserSerializer
 
 
-AUTH_TOKEN = 'JWT ' + os.getenv('JWT_TOKEN')
+AUTH_TOKEN = 'JWT ' + config('JWT_TOKEN')
 
 
 class UserViewTestCase(TestCase):
