@@ -94,7 +94,7 @@ class ShuffleView(APIView):
             elif request_type == "secretsanta":
                 # Create all secretsanta pairs for that year
                 users_queryset = User.objects.exclude(
-                    username="shuffle@andela.com")
+                    username="shufflebox@andela.com")
                 users = list(users_queryset)
                 shuffle(users)
                 remainder = [users[-1] and users.pop() if len(users) %
