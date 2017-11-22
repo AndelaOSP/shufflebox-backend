@@ -13,7 +13,7 @@ import os
 from api.serializers import UserSerializer
 
 
-AUTH_TOKEN = 'JWT ' + config('JWT_TOKEN')
+AUTH_TOKEN = 'JWT ' + config('JWT_TOKEN', default='')
 
 
 class UserViewTestCase(TestCase):

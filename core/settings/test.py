@@ -7,7 +7,7 @@ from decouple import config
 
 #Use the following live settings to build on Travis CI
 if config('TRAVIS_BUILD', default=None):
-    SECRET_KEY = config('SECRET_KEY')
+    SECRET_KEY = config('SECRET_KEY', default=None)
     DEBUG = False
 
     DATABASES = {
