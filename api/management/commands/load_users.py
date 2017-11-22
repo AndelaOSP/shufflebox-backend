@@ -11,12 +11,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         headers = {
-            "Authorization": config("USER_API_TOKEN"),
+            "Authorization": config("USER_API_TOKEN", default=''),
             "Content-Type": "Application/json"
         }
         response = requests.get(
-            "{}?{}".format(config("USER_SERVICE_URL"),
-                           config("FILTER_PARAMS")),
+            "{}?{}".format(config("USER_SERVICE_URL", default=''),
+                           config("FILTER_PARAMS", default='')),
             headers=headers)
         if response.status_code == 200:
             # Loop though the users and add them to the db
