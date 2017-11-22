@@ -97,8 +97,7 @@ class ShuffleView(APIView):
                     username="shufflebox@andela.com")
                 users = list(users_queryset)
                 shuffle(users)
-                remainder = [users[-1] and users.pop() if len(users) %
-                             2 > 0 else []]
+                remainder = users[-1] and users.pop() if len(users) > 0 else None
 
                 secret_santas = []
 
@@ -130,13 +129,14 @@ class ShuffleView(APIView):
 
                 # Make P&C the Santa for those not picked
                 admin = User.objects.get(username="shufflebox@andela.com")
-                secret_santas.append(
-                    SecretSanta.objects.create(
-                        date=str(datetime.datetime.now().date()),
-                        santa=admin,
-                        giftee=remainder[0]
+                if remainder is not None:
+                    secret_santas.append(
+                        SecretSanta.objects.create(
+                            date=str(datetime.datetime.now().date()),
+                            santa=admin,
+                            giftee=remainder
+                        )
                     )
-                ) if len(remainder) > 0 else None
 
                 serialized_data = serialize_secretsanta(secret_santas)
                 return Response(
