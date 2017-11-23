@@ -44,6 +44,8 @@ A Django-powered API for handling shufflebox consumption client requests
     SECRET_KEY=<Your-Secret-Key>
     DB_USER=<Your-username>
     DB_PASSWORD=<Your-password>
+    USER_SERVICE_URL=<url-for-andela-user-microservice>
+    FILTER_PARAMS='<filter-to-query-users-from-microservice>'
     ```
 
     Save the file. You'll need it to keep sensitive info from the outside world, and make migrations work! 😄
@@ -65,9 +67,15 @@ A Django-powered API for handling shufflebox consumption client requests
        ```
        
     Finally, add seed data to your newly created database
-      ```
-       $ python3 manage.py loaddata initial_data.json
-       ```
+    - Required: Admin user for shufflebox(P&C)
+     ```
+     $ python3 manage.py loaddata admin.json
+     ```
+    - Optional: Initial data to populate your db
+     ```
+     $ python3 manage.py loaddata initial_data.json
+     ```
+    
 
 * #### Running It
     On your terminal, run the server using this one simple command:
