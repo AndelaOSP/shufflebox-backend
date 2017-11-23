@@ -87,6 +87,7 @@ class InitTestCase(TestCase):
 
 class ShuffleViewTestCase(InitTestCase):
     """Test suite for the shuffling view."""
+    fixtures = ['admin.json']
 
     def test_view_can_generate_hangout_groups(self):
         res = self.client.post(
