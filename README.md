@@ -44,8 +44,17 @@ A Django-powered API for handling shufflebox consumption client requests
     SECRET_KEY=<Your-Secret-Key>
     DB_USER=<Your-username>
     DB_PASSWORD=<Your-password>
+    JWT_TOKEN=<YOUR JWT TOKEN>
+    DJANGO_SETTINGS_MODULE=<Path to settings file e.g core.settings.production>
+    USER_API_TOKEN=<Bearer token>
     USER_SERVICE_URL=<url-for-andela-user-microservice>
-    FILTER_PARAMS='<filter-to-query-users-from-microservice>'
+    FILTER_PARAMS=<filter-to-query-users-from-microservice>
+    EMAIL_USE_TLS=<EMAIL TLS>
+    EMAIL_HOST=<EMAIL HOST>
+    EMAIL_PORT=<EMAIL PORT>
+    EMAIL_HOST_USER=<EMAIL USER ADRESS>
+    EMAIL_HOST_PASSWORD=<EMAIL USER PASSWORD>
+    DEFAULT_FROM_EMAIL=<DEFAULT FROM EMAIL ADDRESS> e.g SHUFFLEBOX <shuffle@andela.com>
     ```
 
     Save the file. You'll need it to keep sensitive info from the outside world, and make migrations work! 😄

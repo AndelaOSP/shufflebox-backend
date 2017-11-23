@@ -1,10 +1,11 @@
 from api.authentication import CustomTokenAuthentication
+from decouple import config
 from rest_framework.test import APITestCase
 from rest_framework import status
 import os
 
 
-AUTH_TOKEN = os.getenv('JWT_TOKEN')
+AUTH_TOKEN = config('JWT_TOKEN', default='')
 AUTH_HEADER = 'JWT ' + AUTH_TOKEN
 
 
