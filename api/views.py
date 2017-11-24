@@ -171,8 +171,8 @@ class SendMailView(APIView):
                     message = f.readlines()
                 message = ''.join(message)
                 for santa in santas:
-                    gifter = santa.santa.username
-                    giftee = santa.giftee.username
+                    gifter = santa.santa.email
+                    giftee = santa.giftee.email
                     if validate_address(gifter) and validate_address(giftee):
                         mail.create_message(message.format(giftee),[gifter])
                     else:
