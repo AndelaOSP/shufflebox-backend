@@ -130,7 +130,7 @@ class ShuffleView(APIView):
                     secret_santas.append(secretsanta_pair)
 
                 # Make P&C the Santa for those not picked
-                admin = User.objects.get(username="shufflebox@andela.com")
+                admin = User.objects.get(email="shufflebox@andela.com")
                 if remainder is not None:
                     secret_santas.append(
                         SecretSanta.objects.create(

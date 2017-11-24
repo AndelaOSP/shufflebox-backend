@@ -28,8 +28,25 @@ class Command(BaseCommand):
             help='User(s) email with no slack accounts. DO NOT USE COMMAS TO SEPARATE THE DIFFERENT EMAILS e.g --email email1 email2'
         )
 
+        parser.add_argument(
+            '--slack',
+            dest='slack',
+            nargs='+',
+            type=str,
+            help='User(s) correct email on slack accounts. DO NOT USE COMMAS TO SEPARATE THE DIFFERENT EMAILS e.g --slack email1 email2'
+        )
+
     def handle(self, *args, **options):
         try:
+            if not User.objects.filter(email='shufflebox@andela.com'):
+                admin = User.objects.create(
+                    username=config('ADMIN_NAME', default='shufflebox'),
+                    first_name='Admin',
+                    last_name='Shufflebox',
+                    email=config('EMAIL_HOST_USER', default='shufflebox@andela.com' )
+                )
+                admin.is_superuser=True
+                admin.save()
             if options['file']:
                 # Fetch user objects based on their emails
                 response = requests.get(
@@ -44,7 +61,7 @@ class Command(BaseCommand):
                         with open(csv_file, 'r') as file:
                             emails = csv.reader(file)
                             for email in emails:
-                                email = email[0]
+                                email = email[0].strip(" ")
                                 if User.objects.filter(email=email):
                                     continue
                                 user_obj = get_slack_user_object(email, members)
@@ -106,6 +123,36 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.SUCCESS('Successfully added {} users to shufflebox via email'.format(count)))
                 else:
                     self.stdout.write(self.style.SUCCESS('No users added to shufflebox'))
+            elif options['slack']:
+                # Fetch user objects based on their emails
+                response = requests.get(
+                    'https://slack.com/api/users.list?token={}'.format(
+                        config('SLACK_TOKEN', default='')))
+                if response.status_code == 200 and response.json()['ok'] == True:
+                    # List of users objects
+                    members = response.json()['members']
+                    count = 0
+                    for email in options['slack']:
+                        if User.objects.filter(email=email):
+                            continue
+                        user_obj = get_slack_user_object(email, members)
+                        co_email = email.replace('com', 'co')
+                        co_user_obj = get_slack_user_object(co_email, members)
+                        if user_obj:
+                            user = User.objects.create_user(
+                                username=user_obj['name'],
+                                first_name=user_obj['profile'].get('first_name', ''),
+                                last_name=user_obj['profile'].get('last_name', ''),
+                                email=email
+                            )
+                            user.profile.avatar = user_obj['profile']['image_{}'.format(24)]
+                            user.profile.bio = user_obj['profile'].get('title', '')
+                            user.save()
+                            count += 1
+                    if count > 0:
+                        self.stdout.write(self.style.SUCCESS('Successfully added {} users to shufflebox via correct slack email'.format(count)))
+                    else:
+                        self.stdout.write(self.style.SUCCESS('No users added to shufflebox'))
             else:
                 self.stderr.write('No options specifed. Use ./manage.py load_users_from_slack --help to check available options')
         except IntegrityError:
