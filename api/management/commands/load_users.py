@@ -1,4 +1,3 @@
-import os
 import requests
 from decouple import config
 from django.contrib.auth.models import User
@@ -25,7 +24,7 @@ class Command(BaseCommand):
             for person in persons:
                 try:
                     user = User.objects.create_user(
-                        username=person["email"],
+                        username='',
                         first_name=person["first_name"],
                         last_name=person["last_name"],
                         email=person["email"]

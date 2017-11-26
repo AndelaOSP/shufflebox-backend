@@ -130,7 +130,7 @@ class ShuffleView(APIView):
                     secret_santas.append(secretsanta_pair)
 
                 # Make P&C the Santa for those not picked
-                admin = User.objects.get(username="shufflebox@andela.com")
+                admin = User.objects.get(email="shufflebox@andela.com")
                 if remainder is not None:
                     secret_santas.append(
                         SecretSanta.objects.create(
@@ -171,8 +171,8 @@ class SendMailView(APIView):
                     message = f.readlines()
                 message = ''.join(message)
                 for santa in santas:
-                    gifter = santa.santa.username
-                    giftee = santa.giftee.username
+                    gifter = santa.santa.email
+                    giftee = santa.giftee.email
                     if validate_address(gifter) and validate_address(giftee):
                         mail.create_message(message.format(giftee),[gifter])
                     else:
