@@ -67,3 +67,11 @@ def notify_admin(subject, message):
         mail_admins(subject=subject, message=message, fail_silently=False)
     except SMTPException as e:
         return str(e)
+
+def get_slack_user_object(email, members):
+    for user in members:
+        try:
+            if email == user.get('profile').get('email'):
+                return user
+        except KeyError:
+            return False
