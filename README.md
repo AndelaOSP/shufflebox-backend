@@ -100,7 +100,7 @@ A Django-powered API for handling shufflebox consumption client requests
 
 | Endpoint                    | Description                                                                    |
 | --------------------------  | ------------------------------------------------------------------------------ |
-| [POST /api/shuffle/](#)     | Shuffle according to request. Request contains **_"type"_**:("hangout" or "brownbag" or "santa") and **_"limit"_**: (Integer) in raw json format|
+| [POST /api/shuffle/](#)     | Shuffle according to request. Request contains **_"type"_**:("hangout" or "brownbag" or "secretsanta") and **_"limit"_**: (Integer) in raw json format|
 | [GET /api/users/](#)        | Get a list of users. |
 | [GET /api/users/:id](#)     | Get a single profile for a user using a user ID. |
 | [POST /api/brownbags/](#)   | Create a single brownbag. Request should have **_date_**, **_status_** and **_user_id_** in form data |
@@ -118,7 +118,7 @@ A Django-powered API for handling shufflebox consumption client requests
 | [POST /api/santas/](#) | Create a single Secret Santa pair. |
 | [GET /api/santas/](#) | Get a list of all Secret Santa pairs. |
 | [GET /api/santa/:id](#) | Get a single Secret Santa pair. |
-| [POST /api/mail/](#) | Send out shuffle box emails. Request contains **_"type"_**:("hangout" or "brownbag" or "santa") |
+| [POST /api/mail/](#) | Send out shuffle box emails. Request contains **_"type"_**:("hangout" or "brownbag" or "secretsanta") |
 
 
 ## Contributing

@@ -43,7 +43,7 @@ class Command(BaseCommand):
                     username=config('ADMIN_NAME', default='shufflebox'),
                     first_name='Admin',
                     last_name='Shufflebox',
-                    email=config('EMAIL_HOST_USER', default='shufflebox@andela.com' )
+                    email=config('SHUFFLE_BOX_EMAIL', default='shufflebox@andela.com' )
                 )
                 admin.is_superuser=True
                 admin.save()

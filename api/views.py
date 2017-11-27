@@ -2,7 +2,7 @@ from .models import Brownbag, Hangout, SecretSanta, Profile, Group
 from .serializers import (
     UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 )
-from .utils import Mail, validate_address, notify_admin
+from .utils import SendMail, validate_address
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -96,10 +96,10 @@ class ShuffleView(APIView):
             elif request_type == "secretsanta":
                 # Create all secretsanta pairs for that year
                 users_queryset = User.objects.exclude(
-                    email="shufflebox@andela.com")
+                    email="shufflebox@andela.com" )
                 users = list(users_queryset)
                 shuffle(users)
-                remainder = users[-1] and users.pop() if len(users) > 0 else None
+                remainder = users[-1] and users.pop() if ((len(users) % 2) > 0) else None
 
                 secret_santas = []
 
@@ -165,21 +165,22 @@ class SendMailView(APIView):
                 pass
             elif request_type == "secretsanta":
                 santas = SecretSanta.objects.all()
-                mail = Mail()
+                mail = SendMail()
                 mail.subject = "Secret Santa"
                 with open('secretsanta.txt', 'r') as f:
                     message = f.readlines()
                 message = ''.join(message)
                 for santa in santas:
-                    gifter = santa.santa.email
+                    gifter = santa.santa
                     giftee = santa.giftee.email
-                    if validate_address(gifter) and validate_address(giftee):
-                        mail.create_message(message.format(giftee),[gifter])
+                    if validate_address(gifter.email) and validate_address(giftee):
+                        mail.santa_message(
+                            message.format(gifter.get_full_name(), giftee),giftee,gifter.email, gifter.get_full_name()
+                        )
                     else:
-                        notify_admin(
-                            "Shuffle Box Secret Santa Error",
-                            "Invalid email address {} for the santa or {} for the giftee.".format(gifter, giftee))
-                mail.mass_mail()
+                        mail.subject = "Secret Santa Error"
+                        mail.message = "Invalid email address {} for the santa or {} for the giftee.".format(gifter, giftee)
+                        mail.notify_admin()
                 return Response(
                     "Succesfully sent out secret santa emails", status=status.HTTP_200_OK
                 )
