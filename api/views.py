@@ -1,4 +1,4 @@
-from .models import Brownbag, Hangout, SecretSanta, Profile, Group
+from .models import Brownbag, Hangout, SecretSanta, Group
 from .serializers import (
     UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 )
@@ -6,7 +6,6 @@ from .utils import SendMail, validate_address
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import ParseError
 from django.contrib.auth.models import User
 from django.conf import settings
 from shufflebox import Randomizer
@@ -174,9 +173,14 @@ class SendMailView(APIView):
                     gifter = santa.santa
                     giftee = santa.giftee.email
                     if validate_address(gifter.email) and validate_address(giftee):
-                        mail.santa_message(
-                            message.format(gifter.get_full_name(), giftee),giftee,gifter.email, gifter.get_full_name()
-                        )
+                        if gifter.email == settings.DEFAULT_FROM_EMAIL:
+                            mail.santa_message(
+                                message.format('PnC', giftee),giftee,settings.PNC_EMAIL, 'PnC'
+                            )
+                        else:
+                            mail.santa_message(
+                                message.format(gifter.get_full_name(), giftee),giftee,gifter.email, gifter.get_full_name()
+                            )
                     else:
                         mail.subject = "Secret Santa Error"
                         mail.message = "Invalid email address {} for the santa or {} for the giftee.".format(gifter, giftee)

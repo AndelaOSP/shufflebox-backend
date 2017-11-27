@@ -2,8 +2,6 @@ import sendgrid
 from sendgrid.helpers.mail import Email, Content, Substitution, Mail
 import urllib.request as urllib
 
-from datetime import date
-from decouple import config
 from django.conf import settings
 from django.core import validators
 from rest_framework import exceptions
@@ -31,7 +29,7 @@ class SendMail(object):
                     mail_msg = Mail(from_email=self.from_email, subject=self.subject, to_email=recipient, content=content)
                     mail_msg.personalizations[0].add_substitution(Substitution(key='-admin-', value=admin_name))
                     mail_msg.personalizations[0].add_substitution(Substitution(key='-message-', value=self.message))
-                    mail_msg.template_id = config('ADMIN_TEMPLATE_ID', default='')
+                    mail_msg.template_id = settings.ADMIN_TEMPLATE
                     self.send_message(mail_msg)
             else:
                 raise exceptions.ValidationError(
@@ -49,9 +47,9 @@ class SendMail(object):
                 mail_msg.personalizations[0].add_substitution(Substitution(key='-santa-', value=santa_name))
                 mail_msg.personalizations[0].add_substitution(Substitution(key='-giftee-', value=giftee_email))
                 mail_msg.personalizations[0].add_substitution(
-                    Substitution(key='-date-', value=config('END_OF_YEAR_PARTY_DATE', default=date.today()))
+                    Substitution(key='-date-', value=settings.END_OF_YEAR_PARTY_DATE)
                 )
-                mail_msg.template_id = config('SANTA_TEMPLATE_ID', default='')
+                mail_msg.template_id = settings.SANTA_TEMPLATE
                 self.send_message(mail_msg)
             else:
                 raise exceptions.ValidationError(

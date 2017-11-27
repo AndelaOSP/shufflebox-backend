@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from datetime import date
 from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -171,6 +172,15 @@ ADMINS = [
     ('Bonnie', 'boniface.mwenda@andela.com')
 ]
 
+ADMIN_NAME = config('ADMIN_NAME', default='shufflebox')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='')
-SENDGRID_API_KEY = config("SENDGRID_API_KEY", default='')
+PNC_EMAIL = config('PNC_EMAIL', default='')
+
+END_OF_YEAR_PARTY_DATE = config('END_OF_YEAR_PARTY_DATE', default=date.today())
+
+SLACK_TOKEN = config('SLACK_TOKEN', default='')
+
+SENDGRID_API_KEY = config('SENDGRID_API_KEY', default='')
+ADMIN_TEMPLATE = config('ADMIN_TEMPLATE_ID', default='')
+SANTA_TEMPLATE = config('SANTA_TEMPLATE_ID', default='')
 
