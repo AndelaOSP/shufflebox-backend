@@ -1,7 +1,7 @@
 import csv
 import requests
-from api.utils import get_slack_user_object, notify_admin
-from decouple import config
+from api.utils import get_slack_user_object, SendMail
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
 from django.db import IntegrityError
@@ -40,10 +40,10 @@ class Command(BaseCommand):
         try:
             if not User.objects.filter(email='shufflebox@andela.com'):
                 admin = User.objects.create(
-                    username=config('ADMIN_NAME', default='shufflebox'),
+                    username=settings.ADMIN_NAME,
                     first_name='Admin',
                     last_name='Shufflebox',
-                    email=config('SHUFFLE_BOX_EMAIL', default='shufflebox@andela.com' )
+                    email=settings.DEFAULT_FROM_EMAIL
                 )
                 admin.is_superuser=True
                 admin.save()
@@ -51,7 +51,7 @@ class Command(BaseCommand):
                 # Fetch user objects based on their emails
                 response = requests.get(
                     'https://slack.com/api/users.list?token={}'.format(
-                        config('SLACK_TOKEN', default='')))
+                        settings.SLACK_TOKEN))
                 if response.status_code == 200 and response.json()['ok'] == True:
                     # List of users objects
                     members = response.json()['members']
@@ -92,8 +92,10 @@ class Command(BaseCommand):
                                 else:
                                     unmatched_emails = unmatched_emails + email + '\r'
                     if unmatched_emails:
-                        message = "The following users don't have slack accounts\r{}".format(unmatched_emails)
-                        notify_admin('Users without slack', message)
+                        email = SendMail()
+                        email.message = "The following users don't have slack accounts\r{}".format(unmatched_emails)
+                        email.subject = "Users not using slack"
+                        email.notify_admin()
                     if count > 0:
                         self.stdout.write(
                             self.style.SUCCESS('Successfully added {} users to shufflebox via email'.format(count)))
@@ -127,7 +129,7 @@ class Command(BaseCommand):
                 # Fetch user objects based on their emails
                 response = requests.get(
                     'https://slack.com/api/users.list?token={}'.format(
-                        config('SLACK_TOKEN', default='')))
+                        settings.SLACK_TOKEN))
                 if response.status_code == 200 and response.json()['ok'] == True:
                     # List of users objects
                     members = response.json()['members']
