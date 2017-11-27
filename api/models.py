@@ -79,6 +79,12 @@ class SecretSanta(models.Model):
         """Return a string representation of the model instance."""
         return "Santa: {}, Giftee: {}".format(self.santa, self.giftee)
 
+    def get_santa_email(self):
+        return self.santa.email
+
+    def get_giftee_email(self):
+        return self.giftee.email
+
 
 # Decorator to pass in a post_save signal
 @receiver(post_save, sender=User)

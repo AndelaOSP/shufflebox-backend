@@ -1,56 +1,71 @@
+import sendgrid
+from sendgrid.helpers.mail import Email, Content, Substitution, Mail
+import urllib.request as urllib
+
+from datetime import date
+from decouple import config
 from django.conf import settings
-from django.core.mail import send_mail, get_connection, mail_admins, EmailMessage
 from django.core import validators
-from smtplib import SMTPException
 from rest_framework import exceptions
 
 
-class Mail(object):
+class SendMail(object):
     """
     Class to handle sending of emails
     """
-    message_list = []
-    subject = 'No subject'
-    message = 'No message'
+    def __init__(self):
+        self.message_list = []
+        self.subject = 'No subject'
+        self.message = 'No message'
+        self.send_grid = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
+        self.from_email = Email(email=settings.DEFAULT_FROM_EMAIL, name='SHUFFLEBOX')
 
-    def single_mail(self, recipient=None):
+    def notify_admin(self):
         """Sends out a single email"""
         try:
-            if validate_address(recipient):
-                send_mail(
-                    subject=self.subject, message=self.message, from_email= settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[recipient],fail_silently=False
+            if settings.ADMINS:
+                for admin in settings.ADMINS:
+                    admin_name = admin[0]
+                    recipient = Email(admin[1])
+                    content = Content('text/html', self.message)
+                    mail_msg = Mail(from_email=self.from_email, subject=self.subject, to_email=recipient, content=content)
+                    mail_msg.personalizations[0].add_substitution(Substitution(key='-admin-', value=admin_name))
+                    mail_msg.personalizations[0].add_substitution(Substitution(key='-message-', value=self.message))
+                    mail_msg.template_id = config('ADMIN_TEMPLATE_ID', default='')
+                    self.send_message(mail_msg)
+            else:
+                raise exceptions.ValidationError(
+                    "Admin list should not be empty")
+        except urllib.HTTPError as e:
+            return str(e)
+
+
+    def santa_message(self, message=None, giftee_email=None, recipient=None, santa_name=None):
+        try:
+            if recipient:
+                recipient = Email(recipient)
+                content = Content('text/html', message)
+                mail_msg = Mail(from_email=self.from_email, subject=self.subject, to_email=recipient, content=content)
+                mail_msg.personalizations[0].add_substitution(Substitution(key='-santa-', value=santa_name))
+                mail_msg.personalizations[0].add_substitution(Substitution(key='-giftee-', value=giftee_email))
+                mail_msg.personalizations[0].add_substitution(
+                    Substitution(key='-date-', value=config('END_OF_YEAR_PARTY_DATE', default=date.today()))
                 )
-            else:
-                notify_admin('Shuffle Box Error','Invalid recipient {}'.format(recipient))
-                raise exceptions.ValidationError(
-                    "Email message and recipient should be included. Recipient should also be a valid email address.")
-        except SMTPException as e:
-            return str(e)
-
-    def mass_mail(self):
-        try:
-            if self.message_list:
-                connection = get_connection()
-                connection.send_messages(self.message_list)
-            else:
-                raise exceptions.ValidationError(
-                    "Message list should not be empty")
-        except SMTPException as e:
-            return str(e)
-
-    def create_message(self, message='No message', recipients=None):
-        try:
-            if recipients and isinstance(recipients, list):
-                mail_msg = EmailMessage(self.subject, message, settings.DEFAULT_FROM_EMAIL, recipients)
-                mail_msg.content_subtype = 'HTML'
-                self.message_list.append(mail_msg)
+                mail_msg.template_id = config('SANTA_TEMPLATE_ID', default='')
+                self.send_message(mail_msg)
             else:
                 raise exceptions.ValidationError(
                     "Recipients list should not be empty")
-        except SMTPException as e:
+        except urllib.HTTPError as e:
             return str(e)
 
+    def send_message(self, mail):
+        try:
+            return self.send_grid.client.mail.send.post(request_body=mail.get())
+        except Exception as e:
+            self.subject = "Mail Error"
+            self.message = str(e)
+            self.notify_admin()
 
 
 
@@ -61,12 +76,6 @@ def validate_address(address):
     except validators.ValidationError:
         return False
 
-
-def notify_admin(subject, message):
-    try:
-        mail_admins(subject=subject, message=message, fail_silently=False)
-    except SMTPException as e:
-        return str(e)
 
 def get_slack_user_object(email, members):
     for user in members:
