@@ -4,19 +4,38 @@ import urllib.request as urllib
 
 from django.conf import settings
 from django.core import validators
+from django.core.mail import send_mail
 from rest_framework import exceptions
 
 
-class SendMail(object):
+class DefaultMail(object):
     """
-    Class to handle sending of emails
+    Common email class settings
     """
     def __init__(self):
         self.message_list = []
         self.subject = 'No subject'
         self.message = 'No message'
+        self.from_email = "{} <{}>".format(settings.ADMIN_NAME.upper() ,settings.DEFAULT_FROM_EMAIL)
+        self.recipients = []
+
+
+
+class MailGun(DefaultMail):
+    """
+    Class to handle mail gun emails
+    """
+    def single_mail(self):
+        send_mail(self.subject, self.message, self.from_email, self.recipients)
+
+class SendMail(DefaultMail):
+    """
+    Class to handle sending of emails
+    """
+    def __init__(self):
         self.send_grid = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
         self.from_email = Email(email=settings.DEFAULT_FROM_EMAIL, name='SHUFFLEBOX')
+        super(SendMail, self).__init__()
 
     def notify_admin(self):
         """Sends out a single email"""
@@ -64,7 +83,6 @@ class SendMail(object):
             self.subject = "Mail Error"
             self.message = str(e)
             self.notify_admin()
-
 
 
 def validate_address(address):
