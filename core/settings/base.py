@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'social_django',
     'django_nose',
+    'anymail',
 ]
 
 REST_FRAMEWORK = {
@@ -165,6 +166,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+ANYMAIL = {
+    'MAILGUN_API_KEY': config('MAILGUN_API_KEY', default=''),
+    'MAILGUN_SENDER_DOMAIN': config('MAILGUN_SENDER_DOMAIN', default='')
+}
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='')
 
 ADMINS = [
     ('Dng', 'denis.gathondu@andela.com'),
