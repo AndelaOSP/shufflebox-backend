@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 from shufflebox import Randomizer
 from dateutil.relativedelta import relativedelta, FR
 
@@ -95,7 +96,7 @@ class ShuffleView(APIView):
             elif request_type == "secretsanta":
                 # Create all secretsanta pairs for that year
                 users_queryset = User.objects.exclude(
-                    email="shufflebox@andela.com" )
+                    email="shufflebox@andela.com")
                 users = list(users_queryset)
                 shuffle(users)
                 remainder = users[-1] and users.pop() if ((len(users) % 2) > 0) else None
@@ -151,8 +152,10 @@ class ShuffleView(APIView):
                 "Bad Request: Missing Either 'type' or 'limit' ",
                 status=status.HTTP_400_BAD_REQUEST)
 
+
 class SendMailView(APIView):
     """View for sending out emails"""
+
     def post(self, request):
         try:
             request_type = request.data.get('type')
@@ -175,15 +178,17 @@ class SendMailView(APIView):
                     if validate_address(gifter.email) and validate_address(giftee):
                         if gifter.email == settings.DEFAULT_FROM_EMAIL:
                             mail.santa_message(
-                                message.format('PnC', giftee),giftee,settings.PNC_EMAIL, 'PnC'
+                                message.format('PnC', giftee), giftee, settings.PNC_EMAIL, 'PnC'
                             )
                         else:
                             mail.santa_message(
-                                message.format(gifter.get_full_name(), giftee),giftee,gifter.email, gifter.get_full_name()
+                                message.format(gifter.get_full_name(), giftee), giftee, gifter.email,
+                                gifter.get_full_name()
                             )
                     else:
                         mail.subject = "Secret Santa Error"
-                        mail.message = "Invalid email address {} for the santa or {} for the giftee.".format(gifter, giftee)
+                        mail.message = "Invalid email address {} for the santa or {} for the giftee.".format(gifter,
+                                                                                                             giftee)
                         mail.notify_admin()
                 return Response(
                     "Succesfully sent out secret santa emails", status=status.HTTP_200_OK
@@ -195,6 +200,20 @@ class SendMailView(APIView):
         except KeyError:
             return Response("Bad Request: Missing 'type'", status=status.HTTP_400_BAD_REQUEST)
 
+
+@csrf_exempt
+def get_giftee(request):
+    """View to return the giftee of logged in user"""
+    if request.method == 'GET':
+        secretsanta = SecretSanta.objects.all()
+        try:
+            giftee_mail = \
+                [giftee.get_giftee_email() for giftee in secretsanta if giftee.get_santa_email() == request.user.email][
+                    0]
+            return Response("The giftee for {} is {}".format(request.user.username, giftee_mail),
+                            status=status.HTTP_200_OK)
+        except IndexError:
+            return Response('The user has no giftee', status=status.HTTP_404_NOT_FOUND)
 
 
 def serialize_secretsanta(secretsanta_data):
@@ -272,6 +291,7 @@ def render_json(serializer_class):
     """
     This decorator intercepts a model instance and renders it in json format.
     """
+
     def wrapper(func):
         @functools.wraps(func)
         def wrapped(*args, **kwargs):
@@ -279,7 +299,9 @@ def render_json(serializer_class):
             serializer = serializer_class(result)
             rendered = JSONRenderer().render(serializer.data)
             return json.loads(rendered.decode())
+
         return wrapped
+
     return wrapper
 
 

@@ -4,7 +4,7 @@ from .views import (
     UserView, ProfileView, ShuffleView, HangoutView,
     BrownbagView, SecretSantaView, HangoutDetailsView, BrownbagDetailsView,
     BrownbagNextInLineView, BrownbagUserListView, SecretSantaDetailsView,
-    SendMailView
+    SendMailView, get_giftee
 )
 
 
@@ -24,6 +24,7 @@ urlpatterns = {
     url(r'^santas/$', SecretSantaView.as_view(), name="santa"),
     url(r'^santas/(?P<pk>[0-9]+)/$',
         SecretSantaDetailsView.as_view(), name="santa_details"),
+    url(r'^giftee/$',get_giftee, name="giftee"),
     url(r'^mail/', SendMailView.as_view(), name="send_emails"),
 }
 
