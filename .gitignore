@@ -92,3 +92,6 @@ env/
 
 # Mac system files
 .DS_Store
+/.gtm/
+
+/.idea/
