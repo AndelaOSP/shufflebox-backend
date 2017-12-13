@@ -1,25 +1,25 @@
+import calendar
+import datetime
+import functools
+import json
+from random import shuffle
+
+from dateutil.relativedelta import relativedelta, FR
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+from rest_framework import generics, status
+from rest_framework.decorators import api_view
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from shufflebox import Randomizer
+
 from .models import Brownbag, Hangout, SecretSanta, Group
 from .serializers import (
     UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 )
 from .utils import SendMail, validate_address
-from rest_framework import generics, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from django.contrib.auth.models import User
-from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
-from shufflebox import Randomizer
-from dateutil.relativedelta import relativedelta, FR
-
-from rest_framework.renderers import JSONRenderer
-from django.db import IntegrityError
-from random import shuffle
-import datetime
-import calendar
-import json
-import functools
 
 HANGOUT_GROUP_LIMIT = 10
 SECRET_SANTA_LIMIT = 2
@@ -211,7 +211,7 @@ def get_giftee(request):
             giftee_mail = \
                 [giftee.get_giftee_email() for giftee in secretsanta if giftee.get_santa_email() == request.user.email][
                     0]
-            return Response("The giftee for {} is {}".format(request.user.username, giftee_mail),
+            return Response({"giftee": "{}".format(giftee_mail)},
                             status=status.HTTP_200_OK)
         except IndexError:
             return Response("The user has no giftee", status=status.HTTP_404_NOT_FOUND)
