@@ -119,6 +119,7 @@ A Django-powered API for handling shufflebox consumption client requests
 | [GET /api/santas/](#) | Get a list of all Secret Santa pairs. |
 | [GET /api/santa/:id](#) | Get a single Secret Santa pair. |
 | [POST /api/mail/](#) | Send out shuffle box emails. Request contains **_"type"_**:("hangout" or "brownbag" or "secretsanta") |
+| [GET /api/giftee/](#) | Get the giftee of the logged in user |
 
 
 ## Contributing
