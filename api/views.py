@@ -6,6 +6,7 @@ from .utils import SendMail, validate_address
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -201,7 +202,7 @@ class SendMailView(APIView):
             return Response("Bad Request: Missing 'type'", status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
+@api_view(['GET'])
 def get_giftee(request):
     """View to return the giftee of logged in user"""
     if request.method == 'GET':
@@ -213,7 +214,7 @@ def get_giftee(request):
             return Response("The giftee for {} is {}".format(request.user.username, giftee_mail),
                             status=status.HTTP_200_OK)
         except IndexError:
-            return Response('The user has no giftee', status=status.HTTP_404_NOT_FOUND)
+            return Response("The user has no giftee", status=status.HTTP_404_NOT_FOUND)
 
 
 def serialize_secretsanta(secretsanta_data):
