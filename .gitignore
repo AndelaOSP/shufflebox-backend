@@ -90,5 +90,7 @@ env/
 # Rope project settings
 .ropeproject
 
+
 # Mac system files
 .DS_Store
+/.gtm/
