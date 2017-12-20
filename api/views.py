@@ -216,7 +216,7 @@ def get_giftee(request):
                 {"giftee": {"email": "{}".format(giftee_mail), "avatar": "{}".format(giftee.profile.avatar)}},
                 status=status.HTTP_200_OK)
         except IndexError:
-            return Response("The user has no giftee", status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "The user has no giftee"}, status=status.HTTP_404_NOT_FOUND)
 
 
 def serialize_secretsanta(secretsanta_data):

@@ -74,7 +74,7 @@ class Command(BaseCommand):
                                         last_name=user_obj['profile'].get('last_name', ''),
                                         email=email
                                     )
-                                    user.profile.avatar = user_obj['profile']['image_{}'.format(24)]
+                                    user.profile.avatar = user_obj['profile']['image_{}'.format(512)]
                                     user.profile.bio = user_obj['profile'].get('title','')
                                     user.save()
                                     count += 1
@@ -85,7 +85,7 @@ class Command(BaseCommand):
                                         last_name=co_user_obj['profile'].get('last_name', ''),
                                         email=email
                                     )
-                                    user.profile.avatar = co_user_obj['profile']['image_{}'.format(24)]
+                                    user.profile.avatar = co_user_obj['profile']['image_{}'.format(512)]
                                     user.profile.bio = co_user_obj['profile'].get('title', '')
                                     user.save()
                                     count += 1
@@ -147,7 +147,7 @@ class Command(BaseCommand):
                                 last_name=user_obj['profile'].get('last_name', ''),
                                 email=email
                             )
-                            user.profile.avatar = user_obj['profile']['image_{}'.format(24)]
+                            user.profile.avatar = user_obj['profile']['image_{}'.format(512)]
                             user.profile.bio = user_obj['profile'].get('title', '')
                             user.save()
                             count += 1
