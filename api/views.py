@@ -211,8 +211,10 @@ def get_giftee(request):
             giftee_mail = \
                 [giftee.get_giftee_email() for giftee in secretsanta if giftee.get_santa_email() == request.user.email][
                     0]
-            return Response({"giftee": "{}".format(giftee_mail)},
-                            status=status.HTTP_200_OK)
+            giftee = User.objects.get(email=giftee_mail)
+            return Response(
+                {"giftee": {"email": "{}".format(giftee_mail), "avatar": "{}".format(giftee.profile.avatar)}},
+                status=status.HTTP_200_OK)
         except IndexError:
             return Response("The user has no giftee", status=status.HTTP_404_NOT_FOUND)
 
