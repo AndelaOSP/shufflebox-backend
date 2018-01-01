@@ -7,7 +7,6 @@ from .views import (
     SendMailView, get_giftee
 )
 
-
 urlpatterns = {
     url(r'^users/$', UserView.as_view(), name="users"),
     url(r'users/(?P<pk>[0-9]+)/$',
