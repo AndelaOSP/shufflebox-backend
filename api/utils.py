@@ -12,26 +12,29 @@ class DefaultMail(object):
     """
     Common email class settings
     """
+
     def __init__(self):
         self.message_list = []
         self.subject = 'No subject'
         self.message = 'No message'
-        self.from_email = "{} <{}>".format(settings.ADMIN_NAME.upper() ,settings.DEFAULT_FROM_EMAIL)
+        self.from_email = "{} <{}>".format(settings.ADMIN_NAME.upper(), settings.DEFAULT_FROM_EMAIL)
         self.recipients = []
-
 
 
 class MailGun(DefaultMail):
     """
     Class to handle mail gun emails
     """
+
     def single_mail(self):
         send_mail(self.subject, self.message, self.from_email, self.recipients)
+
 
 class SendMail(DefaultMail):
     """
     Class to handle sending of emails
     """
+
     def __init__(self):
         self.send_grid = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
         self.from_email = Email(email=settings.DEFAULT_FROM_EMAIL, name='SHUFFLEBOX')
@@ -45,7 +48,8 @@ class SendMail(DefaultMail):
                     admin_name = admin[0]
                     recipient = Email(admin[1])
                     content = Content('text/html', self.message)
-                    mail_msg = Mail(from_email=self.from_email, subject=self.subject, to_email=recipient, content=content)
+                    mail_msg = Mail(from_email=self.from_email, subject=self.subject, to_email=recipient,
+                                    content=content)
                     mail_msg.personalizations[0].add_substitution(Substitution(key='-admin-', value=admin_name))
                     mail_msg.personalizations[0].add_substitution(Substitution(key='-message-', value=self.message))
                     mail_msg.template_id = settings.ADMIN_TEMPLATE
@@ -55,7 +59,6 @@ class SendMail(DefaultMail):
                     "Admin list should not be empty")
         except urllib.HTTPError as e:
             return str(e)
-
 
     def santa_message(self, message=None, giftee_email=None, recipient=None, santa_name=None):
         try:

@@ -17,7 +17,6 @@ from decouple import config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -105,7 +104,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -161,7 +159,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
@@ -190,4 +187,3 @@ SLACK_TOKEN = config('SLACK_TOKEN', default='')
 SENDGRID_API_KEY = config('SENDGRID_API_KEY', default='')
 ADMIN_TEMPLATE = config('ADMIN_TEMPLATE_ID', default='')
 SANTA_TEMPLATE = config('SANTA_TEMPLATE_ID', default='')
-
