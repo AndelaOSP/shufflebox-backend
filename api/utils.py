@@ -48,10 +48,36 @@ class MailGun(DefaultMail):
         message.merge_global_data = self.global_data
         message.send()
 
+    def notify_admin(self):
+        """Sends out an email to the defined admins"""
+        try:
+            with open('templates/error.html', 'r') as f:
+                html = f.readlines()
+            html = ''.join(html)
+            if settings.ADMINS:
+                for admin in settings.ADMINS:
+                    admin_name = admin[0]
+                    recipient = admin[1]
+                    mail_msg = EmailMultiAlternatives(
+                        from_email=self.from_email,
+                        subject=self.subject,
+                        to=[recipient],
+                        body=self.body,
+                        reply_to=[self.from_email]
+                    )
+                    mail_msg.attach_alternative(html.format(admin_name, self.body), "text/html")
+                    mail_msg.tags = ["shufflebox", "error", "bug"]
+                    mail_msg.send()
+            else:
+                raise exceptions.ValidationError(
+                    "Admin list should not be empty")
+        except urllib.HTTPError as e:
+            return str(e)
 
-class SendMail(DefaultMail):
+
+class SendGrid(DefaultMail):
     """
-    Class to handle sending of emails
+    Class to handle sending of emails from sendgrid
     """
 
     def __init__(self):
