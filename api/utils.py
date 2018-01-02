@@ -83,7 +83,7 @@ class SendGrid(DefaultMail):
     def __init__(self):
         self.send_grid = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
         self.from_email = Email(email=settings.DEFAULT_FROM_EMAIL, name='SHUFFLEBOX')
-        super(SendMail, self).__init__()
+        super(SendGrid, self).__init__()
 
     def notify_admin(self):
         """Sends out an email to the defined admins"""
