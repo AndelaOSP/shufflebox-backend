@@ -168,7 +168,7 @@ ANYMAIL = {
     'MAILGUN_API_KEY': config('MAILGUN_API_KEY', default=''),
     'MAILGUN_SENDER_DOMAIN': config('MAILGUN_SENDER_DOMAIN', default='')
 }
-EMAIL_BACKEND = config('EMAIL_BACKEND', default='')
+EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
 
 ADMINS = [
     ('Dng', 'denis.gathondu@andela.com'),
