@@ -8,7 +8,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     """This class defines a serializer for the Profile model."""
 
     class Meta:
-
         model = Profile
         fields = ('avatar', 'birth_date', 'bio')
 
@@ -56,7 +55,6 @@ class BrownbagSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
     class Meta:
-
         model = Brownbag
         fields = ('id', 'date', 'status', 'user')
 
@@ -67,7 +65,6 @@ class GroupSerializer(serializers.ModelSerializer):
     members = UserSerializer(many=True)
 
     class Meta:
-
         model = Group
         fields = ('id', 'members')
 
@@ -78,7 +75,6 @@ class HangoutSerializer(serializers.ModelSerializer):
     groups = GroupSerializer(many=True, read_only=True)
 
     class Meta:
-
         model = Hangout
         fields = ('id', 'date', 'groups')
 

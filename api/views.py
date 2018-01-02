@@ -19,7 +19,7 @@ from .models import Brownbag, Hangout, SecretSanta, Group
 from .serializers import (
     UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 )
-from .utils import SendMail, validate_address
+from .utils import MailGun, validate_address
 
 HANGOUT_GROUP_LIMIT = 10
 SECRET_SANTA_LIMIT = 2
@@ -42,7 +42,7 @@ class ShuffleView(APIView):
 
     def post(self, request):
         """
-        Return a query set according to the post message status.
+        Return a query set according to the post body status.
         """
         try:
             request_type = request.data.get('type')
@@ -53,7 +53,7 @@ class ShuffleView(APIView):
                     valid_number, users = check_people(int(size))
                     if not valid_number:
                         return Response(
-                            {'message': "The number of people exceeds available users. Available users is {}".format(
+                            {'body': "The number of people exceeds available users. Available users is {}".format(
                                 users)},
                             status=status.HTTP_400_BAD_REQUEST)
                     check_date(datetime.date.today())
@@ -86,7 +86,7 @@ class ShuffleView(APIView):
                     data = create_hangout(group_size=size)
                 except IntegrityError:
                     return Response(
-                        {'message': "Hangouts for this month already exists"},
+                        {'body': "Hangouts for this month already exists"},
                         status=status.HTTP_400_BAD_REQUEST)
                 except Exception as e:
                     return Response(
@@ -168,31 +168,35 @@ class SendMailView(APIView):
                 pass
             elif request_type == "secretsanta":
                 santas = SecretSanta.objects.all()
-                mail = SendMail()
+                mail = MailGun()
                 mail.subject = "Secret Santa"
                 with open('secretsanta.txt', 'r') as f:
                     message = f.readlines()
+                with open('templates/secretsanta.html', 'r') as f:
+                    html = f.readlines()
                 message = ''.join(message)
+                mail.global_data['party_date'] = settings.END_OF_YEAR_PARTY_DATE
                 for santa in santas:
                     gifter = santa.santa
                     giftee = santa.giftee.email
                     if validate_address(gifter.email) and validate_address(giftee):
                         if gifter.email == settings.DEFAULT_FROM_EMAIL:
-                            mail.santa_message(
-                                message.format('PnC', giftee), giftee, settings.PNC_EMAIL, 'PnC'
-                            )
+                            continue
+                            mail.body = message.format('PnC', giftee, settings.END_OF_YEAR_PARTY_DATE)
+                            mail.recipients.append(settings.PNC_EMAIL)
+                            mail.data[settings.PNC_EMAIL] = {'santa': 'PnC', 'giftee': giftee}
                         else:
-                            mail.santa_message(
-                                message.format(gifter.get_full_name(), giftee), giftee, gifter.email,
-                                gifter.get_full_name()
-                            )
+                            mail.body = message.format(gifter.get_full_name(), giftee, settings.END_OF_YEAR_PARTY_DATE)
+                            mail.recipients.append(gifter.email)
+                            mail.data[gifter.email] = {'santa': gifter.get_full_name(), 'giftee': giftee}
                     else:
                         mail.subject = "Secret Santa Error"
-                        mail.message = "Invalid email address {} for the santa or {} for the giftee.".format(gifter,
-                                                                                                             giftee)
+                        mail.body = "Invalid email address {} for the santa or {} for the giftee.".format(gifter,
+                                                                                                          giftee)
                         mail.notify_admin()
+                mail.send_batch_html_mail(html, request_type)
                 return Response(
-                    "Succesfully sent out secret santa emails", status=status.HTTP_200_OK
+                    "Successfully sent out secret santa emails", status=status.HTTP_200_OK
                 )
             else:
                 return Response(

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
 from django.db import IntegrityError
 
+
 class Command(BaseCommand):
     help = "Fetches users from slack and loads them to shufflebox"
 
@@ -45,7 +46,7 @@ class Command(BaseCommand):
                     last_name='Shufflebox',
                     email=settings.DEFAULT_FROM_EMAIL
                 )
-                admin.is_superuser=True
+                admin.is_superuser = True
                 admin.save()
             if options['file']:
                 # Fetch user objects based on their emails
@@ -122,7 +123,8 @@ class Command(BaseCommand):
                     user.save()
                     count += 1
                 if count > 0:
-                    self.stdout.write(self.style.SUCCESS('Successfully added {} users to shufflebox via email'.format(count)))
+                    self.stdout.write(
+                        self.style.SUCCESS('Successfully added {} users to shufflebox via email'.format(count)))
                 else:
                     self.stdout.write(self.style.SUCCESS('No users added to shufflebox'))
             elif options['slack']:
@@ -152,11 +154,13 @@ class Command(BaseCommand):
                             user.save()
                             count += 1
                     if count > 0:
-                        self.stdout.write(self.style.SUCCESS('Successfully added {} users to shufflebox via correct slack email'.format(count)))
+                        self.stdout.write(self.style.SUCCESS(
+                            'Successfully added {} users to shufflebox via correct slack email'.format(count)))
                     else:
                         self.stdout.write(self.style.SUCCESS('No users added to shufflebox'))
             else:
-                self.stderr.write('No options specifed. Use ./manage.py load_users_from_slack --help to check available options')
+                self.stderr.write(
+                    'No options specified. Use ./manage.py load_users_from_slack --help to check available options')
         except IntegrityError:
             pass  # user already exists
         except Exception as e:
