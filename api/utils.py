@@ -4,7 +4,7 @@ import urllib.request as urllib
 
 from django.conf import settings
 from django.core import validators
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from rest_framework import exceptions
 
 
@@ -16,9 +16,11 @@ class DefaultMail(object):
     def __init__(self):
         self.message_list = []
         self.subject = 'No subject'
-        self.message = 'No message'
+        self.body = 'No body'
         self.from_email = "{} <{}>".format(settings.ADMIN_NAME.upper(), settings.DEFAULT_FROM_EMAIL)
         self.recipients = []
+        self.data = {}
+        self.global_data = {}
 
 
 class MailGun(DefaultMail):
@@ -26,8 +28,25 @@ class MailGun(DefaultMail):
     Class to handle mail gun emails
     """
 
-    def single_mail(self):
-        send_mail(self.subject, self.message, self.from_email, self.recipients)
+    def send_single_mail(self, recipients):
+        """Sends out a single email"""
+        self.recipients.append(recipients)
+        send_mail(self.subject, self.body, self.from_email, self.recipients)
+
+    def send_batch_html_mail(self, html, request_type):
+        """Send out batch html messages"""
+        message = EmailMultiAlternatives(
+            subject=self.subject,
+            body=self.body,
+            from_email=self.from_email,
+            to=self.recipients,
+            reply_to=[self.from_email]
+        )
+        message.attach_alternative(html, "text/html")
+        message.tags = ["shufflebox", request_type]
+        message.merge_data = self.data
+        message.merge_global_data = self.global_data
+        message.send()
 
 
 class SendMail(DefaultMail):
@@ -41,7 +60,7 @@ class SendMail(DefaultMail):
         super(SendMail, self).__init__()
 
     def notify_admin(self):
-        """Sends out a single email"""
+        """Sends out an email to the defined admins"""
         try:
             if settings.ADMINS:
                 for admin in settings.ADMINS:
@@ -51,7 +70,7 @@ class SendMail(DefaultMail):
                     mail_msg = Mail(from_email=self.from_email, subject=self.subject, to_email=recipient,
                                     content=content)
                     mail_msg.personalizations[0].add_substitution(Substitution(key='-admin-', value=admin_name))
-                    mail_msg.personalizations[0].add_substitution(Substitution(key='-message-', value=self.message))
+                    mail_msg.personalizations[0].add_substitution(Substitution(key='-body-', value=self.message))
                     mail_msg.template_id = settings.ADMIN_TEMPLATE
                     self.send_message(mail_msg)
             else:

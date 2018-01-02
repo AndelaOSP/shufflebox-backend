@@ -160,7 +160,7 @@ class Command(BaseCommand):
                         self.stdout.write(self.style.SUCCESS('No users added to shufflebox'))
             else:
                 self.stderr.write(
-                    'No options specifed. Use ./manage.py load_users_from_slack --help to check available options')
+                    'No options specified. Use ./manage.py load_users_from_slack --help to check available options')
         except IntegrityError:
             pass  # user already exists
         except Exception as e:
