@@ -134,6 +134,7 @@ class SendGrid(DefaultMail):
 
 
 def validate_address(address):
+    """Validates an email"""
     try:
         validators.validate_email(address)
         return True
@@ -142,6 +143,7 @@ def validate_address(address):
 
 
 def get_slack_user_object(email, members):
+    """Gets slack user given the email address"""
     for user in members:
         try:
             if email == user.get('profile').get('email'):

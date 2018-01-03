@@ -19,7 +19,7 @@ from .models import Brownbag, Hangout, SecretSanta, Group
 from .serializers import (
     UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 )
-from .utils import MailGun, validate_address
+from .utils.mail import MailGun, validate_address
 
 HANGOUT_GROUP_LIMIT = 10
 SECRET_SANTA_LIMIT = 2

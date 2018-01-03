@@ -1,6 +1,6 @@
 import csv
 import requests
-from api.utils import get_slack_user_object, MailGun
+from api.utils.mail import get_slack_user_object, MailGun
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
