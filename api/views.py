@@ -50,7 +50,7 @@ class ShuffleView(APIView):
 
             if request_type == "brownbag":
                 try:
-                    valid_number, users = check_people(int(size))
+                    valid_number, users = check_people(size)
                     if not valid_number:
                         return Response(
                             {'body': "The number of people exceeds available users. Available users is {}".format(
@@ -294,6 +294,7 @@ def check_date(date):
 
 def check_people(people):
     """Check that the number of multiple presenters is not larger than available people"""
+    people = 1 if people is None else int(people)
     users = User.objects.filter(
         brownbag__isnull=True).values_list('id', flat=True)
     if people > len(users):

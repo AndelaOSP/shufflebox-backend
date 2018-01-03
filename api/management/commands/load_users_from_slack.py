@@ -1,6 +1,6 @@
 import csv
 import requests
-from api.utils import get_slack_user_object, SendMail
+from api.utils import get_slack_user_object, MailGun
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
@@ -93,7 +93,7 @@ class Command(BaseCommand):
                                 else:
                                     unmatched_emails = unmatched_emails + email + '\r'
                     if unmatched_emails:
-                        email = SendMail()
+                        email = MailGun()
                         email.message = "The following users don't have slack accounts\r{}".format(unmatched_emails)
                         email.subject = "Users not using slack"
                         email.notify_admin()
