@@ -20,6 +20,7 @@ from .serializers import (
     UserSerializer, BrownbagSerializer, HangoutSerializer, SecretSantaSerializer
 )
 from .utils.mail import MailGun, validate_address
+from .utils.brownbag import BrownbagUtility
 
 HANGOUT_GROUP_LIMIT = 10
 SECRET_SANTA_LIMIT = 2
@@ -160,15 +161,32 @@ class SendMailView(APIView):
     def post(self, request):
         try:
             request_type = request.data.get('type')
+            mail = MailGun()
             if request_type == "brownbag":
-                # TODO: add logic for sending out brownbag emails
+                brownbag_util = BrownbagUtility()
+                if request.data.get('id'):
+                    brownbag_id = request.data.get('id')
+                    user_email = brownbag_util.get_user_email(brownbag_id)
+                    brownbag= brownbag_util.get_brownbag(brownbag_id)
+                    mail.subject = 'BrownBag'
+                    if brownbag.status == 'next_in_line':
+                        mail.body = 'Your brownbag is coming up'
+                    elif brownbag.status == 'not_done':
+                        mail.body = 'You skipped your brownbag'
+                    else:
+                        mail.body = 'thanks for holding your brownbag'
+                    mail.send_single_mail(user_email)
+                    return Response(
+                        "Successfully sent out brownbag email to {}".format(user_email), status=status.HTTP_200_OK
+                    )
+                else:
+                    return Response("Bad Request: Missing 'brownbag id'", status=status.HTTP_400_BAD_REQUEST)
                 pass
             elif request_type == "hangout":
                 # TODO:add logic for sending out hangout emails
                 pass
             elif request_type == "secretsanta":
                 santas = SecretSanta.objects.all()
-                mail = MailGun()
                 mail.subject = "Secret Santa"
                 with open('secretsanta.txt', 'r') as f:
                     message = f.readlines()
