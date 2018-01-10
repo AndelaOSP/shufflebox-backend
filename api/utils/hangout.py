@@ -15,4 +15,3 @@ class HangoutUtility(object):
         for member in self.get_members(group):
             emails.append(member.email)
         return emails
-

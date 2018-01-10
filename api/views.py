@@ -354,6 +354,7 @@ def create_hangout(*, group_size=HANGOUT_GROUP_LIMIT):
     """
     # Get all users IDs elligible for brownbag
     users = User.objects.all().values_list('id', flat=True)
+    users = users.exclude(email="shufflebox@andela.com")
     rand = Randomizer(list(users))
     random_groups = rand.create_groups(group_size)
     hangout = Hangout.objects.create(date=last_friday(datetime.datetime.now()))
