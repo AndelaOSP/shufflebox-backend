@@ -21,6 +21,7 @@ from .serializers import (
 )
 from .utils.mail import MailGun, validate_address
 from .utils.brownbag import BrownbagUtility
+from .utils.hangout import HangoutUtility
 
 HANGOUT_GROUP_LIMIT = 10
 SECRET_SANTA_LIMIT = 2
@@ -82,12 +83,12 @@ class ShuffleView(APIView):
 
             elif request_type == "hangout":
                 # Create hangout groups for the month
-                size = request.data.get('limit', HANGOUT_GROUP_LIMIT)
+                size = int(request.data.get('limit', HANGOUT_GROUP_LIMIT))
                 try:
                     data = create_hangout(group_size=size)
                 except IntegrityError:
                     return Response(
-                        {'body': "Hangouts for this month already exists"},
+                        {'message': "Hangouts for this month already exists"},
                         status=status.HTTP_400_BAD_REQUEST)
                 except Exception as e:
                     return Response(
@@ -167,7 +168,7 @@ class SendMailView(APIView):
                 if request.data.get('id'):
                     brownbag_id = request.data.get('id')
                     user_email = brownbag_util.get_user_email(brownbag_id)
-                    brownbag= brownbag_util.get_brownbag(brownbag_id)
+                    brownbag = brownbag_util.get_brownbag(brownbag_id)
                     mail.subject = 'BrownBag'
                     if brownbag.status == 'next_in_line':
                         mail.body = 'Your brownbag is coming up'
@@ -183,8 +184,16 @@ class SendMailView(APIView):
                     return Response("Bad Request: Missing 'brownbag id'", status=status.HTTP_400_BAD_REQUEST)
                 pass
             elif request_type == "hangout":
-                # TODO:add logic for sending out hangout emails
-                pass
+                hangout_util = HangoutUtility()
+                mail.subject = 'Hangouts'
+                mail.body = 'You have been placed in the same hangout group and you should hangout before the last friday of the month'
+                for group in hangout_util.get_groups():
+                    mail.recipients = []
+                    mail.recipients.extend(hangout_util.get_member_emails(group))
+                    mail.send_single_mail()
+                return Response(
+                    "Successfully sent out hangout emails to all groups", status=status.HTTP_200_OK
+                )
             elif request_type == "secretsanta":
                 santas = SecretSanta.objects.all()
                 mail.subject = "Secret Santa"

@@ -31,7 +31,7 @@ class Brownbag(models.Model):
 class Profile(models.Model):
     """Class definition for the User Profile model.
 
-    Extends default django User model that stores username, email, pword etc
+    Extends default django User model that stores username, email, password etc
     """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)

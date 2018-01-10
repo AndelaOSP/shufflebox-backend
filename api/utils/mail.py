@@ -28,9 +28,10 @@ class MailGun(DefaultMail):
     Class to handle mail gun emails
     """
 
-    def send_single_mail(self, recipients):
+    def send_single_mail(self, recipients=None):
         """Sends out a single email"""
-        self.recipients.append(recipients)
+        if recipients:
+            self.recipients.append(recipients)
         send_mail(self.subject, self.body, self.from_email, self.recipients)
 
     def send_batch_html_mail(self, html, request_type):
